@@ -2,49 +2,51 @@ package com.thompalmer.mocktwitterdemo.presentation.login;
 
 import android.content.Context;
 import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
 import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.R;
+import com.thompalmer.mocktwitterdemo.base.BaseViewModel;
 
-public class LoginViewModel {
-    private final ObservableField<String> email = new ObservableField<>();
-    private final ObservableField<String> password = new ObservableField<>();
+import javax.inject.Inject;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
+@LoginScope
+public class LoginViewModel extends BaseViewModel {
     private final ObservableBoolean loggingIn = new ObservableBoolean(false);
-    private final LoginViewBinding binding;
-    private final LoginPresenter presenter;
+    private final LoginViewBinding viewBinding;
     private final Context context;
+    @Inject LoginPresenter presenter;
+    private String email;
+    private String password;
 
-    LoginViewModel(Context context, LoginViewBinding binding) {
-        this.binding = binding;
+    public LoginViewModel(Context context, LoginViewBinding viewBinding) {
+        super(context);
         this.context = context;
-        this.presenter = new LoginPresenter();
+        this.viewBinding = viewBinding;
+    }
+
+    @Override
+    protected void buildComponentAndInject() {
+        DaggerLoginComponent.builder()
+                .mockTwitterComponent(baseComponent)
+                .build()
+                .inject(this);
     }
 
     @SuppressWarnings("unused")
     public void onEmailChanged(CharSequence s, int start, int before, int count) {
-        email.set(s.toString());
-        int emailMessageId = presenter.updateEmailMessageId(email.get());
-        binding.textInputLayoutEmail.setError(emailMessageId == 0 ? null : context.getString(emailMessageId));
+        email = s.toString();
+        int emailMessageId = presenter.updateEmailMessageId(email);
+        viewBinding.textInputLayoutEmail.setError(emailMessageId == 0 ? null : context.getString(emailMessageId));
     }
 
     @SuppressWarnings("unused")
     public void onPasswordChanged(CharSequence s, int start, int before, int count) {
-        password.set(s.toString());
-        int passwordMessageId = presenter.updatePasswordMessageId(password.get());
-        binding.textInputLayoutPassword.setError(passwordMessageId == 0 ? null : context.getString(passwordMessageId));
-    }
-
-    public ObservableBoolean isLoggingIn() {
-        return loggingIn;
-    }
-
-    public ObservableField<String> getEmail() {
-        return email;
-    }
-
-    public ObservableField<String> getPassword() {
-        return password;
+        password = s.toString();
+        int passwordMessageId = presenter.updatePasswordMessageId(password);
+        viewBinding.textInputLayoutPassword.setError(passwordMessageId == 0 ? null : context.getString(passwordMessageId));
     }
 
     @SuppressWarnings("unused")
@@ -53,17 +55,31 @@ public class LoginViewModel {
             return;
         }
 
-        if (presenter.shouldValidateCredentials(email.get(), password.get())) {
+        if (presenter.shouldValidateCredentials(email, password)) {
             loggingIn.set(true);
-            presenter.performLoginAttempt(email.get(), password.get())
+            presenter.performLoginAttempt(email, password)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(success -> {
                         loggingIn.set(false);
                         if (!success) {
-                            binding.textInputLayoutPassword.setError(context.getString(R.string.error_incorrect_password));
+                            viewBinding.textInputLayoutPassword.setError(context.getString(R.string.error_incorrect_password));
                         } else {
                             // TODO Move to next activity
                         }
                     });
         }
+    }
+
+    public ObservableBoolean isLoggingIn() {
+        return loggingIn;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
