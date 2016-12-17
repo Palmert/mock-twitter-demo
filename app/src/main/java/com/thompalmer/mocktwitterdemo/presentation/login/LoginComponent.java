@@ -8,4 +8,5 @@ import dagger.Component;
 @Component(dependencies = TwitterComponent.class)
 public interface LoginComponent {
     void inject(LoginViewModel viewModel);
+    void inject(LoginActivity activity);
 }

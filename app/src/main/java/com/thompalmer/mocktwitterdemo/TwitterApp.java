@@ -16,7 +16,7 @@ public class TwitterApp extends Application {
         buildComponentAndInject();
     }
 
-    public void buildComponentAndInject() {
+    private void buildComponentAndInject() {
         component = TwitterComponent.Initializer.init(this);
         component.inject(this);
     }
