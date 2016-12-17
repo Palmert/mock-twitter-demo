@@ -1,10 +1,12 @@
 package com.thompalmer.mocktwitterdemo.presentation.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.base.BaseViewModel;
+import com.thompalmer.mocktwitterdemo.presentation.feed.TweetActivity;
 
 import javax.inject.Inject;
 
@@ -16,9 +18,10 @@ public class LoginViewModel extends BaseViewModel {
     private final ObservableBoolean loggingIn = new ObservableBoolean(false);
     private final LoginViewBinding viewBinding;
     private final Context context;
-    @Inject LoginPresenter presenter;
     private String email;
     private String password;
+
+    @Inject LoginPresenter presenter;
 
     public LoginViewModel(Context context, LoginViewBinding viewBinding) {
         super(context);
@@ -64,7 +67,9 @@ public class LoginViewModel extends BaseViewModel {
                         if (loginResponse.error != null) {
                             viewBinding.textInputLayoutPassword.setError(loginResponse.error.message);
                         } else {
-                            // TODO Move to next activity
+                            Intent intent = new Intent(context, TweetActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
                         }
                     });
         }
