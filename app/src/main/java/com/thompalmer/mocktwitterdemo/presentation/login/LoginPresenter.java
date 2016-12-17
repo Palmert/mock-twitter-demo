@@ -1,7 +1,5 @@
 package com.thompalmer.mocktwitterdemo.presentation.login;
 
-import android.text.TextUtils;
-
 import com.thompalmer.mocktwitterdemo.R;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.LoginResponse;
 import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
@@ -9,7 +7,6 @@ import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import retrofit2.Response;
 
 public class LoginPresenter {
     private final AttemptUserLogin attemptUserLogin;
@@ -22,7 +19,7 @@ public class LoginPresenter {
     public int updateEmailMessageId(String email) {
         int emailMessageId = 0;
 
-        if (TextUtils.isEmpty(email)) {
+        if (email.isEmpty()) {
             emailMessageId = R.string.error_field_required;
         } else if (!isEmailValid(email)) {
             emailMessageId = R.string.error_invalid_email;
@@ -31,14 +28,14 @@ public class LoginPresenter {
         return emailMessageId;
     }
 
-    private boolean isEmailValid(String email) {
-        return !TextUtils.isEmpty(email) && email.contains("@");
+    public boolean isEmailValid(String email) {
+        return !email.isEmpty() && email.contains("@");
     }
 
     public int updatePasswordMessageId(String password) {
         int passwordMessageId = 0;
 
-        if (TextUtils.isEmpty(password)) {
+        if (password.isEmpty()) {
             passwordMessageId = R.string.error_field_required;
         } else if (!isPasswordValid(password)) {
             passwordMessageId = R.string.error_invalid_password;
@@ -48,7 +45,7 @@ public class LoginPresenter {
     }
 
     public boolean isPasswordValid(String password) {
-        return !TextUtils.isEmpty(password) && password.length() >= 8;
+        return !password.isEmpty() && password.length() >= 8;
     }
 
     public boolean shouldValidateCredentials(String email, String password) {
