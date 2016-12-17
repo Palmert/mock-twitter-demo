@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.HasCurrentSession;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreferences;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
 
@@ -44,14 +44,14 @@ public class TwitterAppModule {
     @Provides
     @ApplicationScope
     @AuthTokenPref
-    LongPreferences providesAuthToken(SharedPreferences preferences) {
-        return new LongPreferences(preferences, "auth_token", -1L);
+    LongPreference providesAuthToken(SharedPreferences preferences) {
+        return new LongPreference(preferences, "auth_token", -1L);
     }
 
     @Provides
     @ApplicationScope
     @HasCurrentSession
-    Boolean providesHasValidSession(@UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreferences authTokenPref) {
+    Boolean providesHasValidSession(@UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref) {
         return userEmailPref.get() != null || authTokenPref.get() != -1L;
     }
 

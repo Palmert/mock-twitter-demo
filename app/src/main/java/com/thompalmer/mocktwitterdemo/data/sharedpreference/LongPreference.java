@@ -4,13 +4,13 @@ import android.content.SharedPreferences;
 
 import javax.inject.Inject;
 
-public class LongPreferences implements SharePreferencesWrapper<Long> {
+public class LongPreference implements SharePreferenceWrapper<Long> {
     private final SharedPreferences preferences;
     private final String key;
     private final Long defaultValue;
 
     @Inject
-    public LongPreferences(SharedPreferences preferences, String key, Long defaultValue) {
+    public LongPreference(SharedPreferences preferences, String key, Long defaultValue) {
         this.preferences = preferences;
         this.key = key;
         this.defaultValue = defaultValue;

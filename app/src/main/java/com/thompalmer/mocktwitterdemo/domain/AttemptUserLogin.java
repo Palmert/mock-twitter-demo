@@ -1,7 +1,7 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreferences;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
 import com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer;
@@ -15,11 +15,11 @@ import io.reactivex.Observable;
 public class AttemptUserLogin {
     private final LocalTwitterServer twitterService;
     private final StringPreference userEmailPref;
-    private final LongPreferences authTokenPref;
+    private final LongPreference authTokenPref;
 
     @Inject
     public AttemptUserLogin(LocalTwitterServer twitterService, @UserEmailPref StringPreference userEmailPref,
-                            @AuthTokenPref LongPreferences authTokenPref) {
+                            @AuthTokenPref LongPreference authTokenPref) {
         this.twitterService = twitterService;
         this.userEmailPref = userEmailPref;
         this.authTokenPref = authTokenPref;

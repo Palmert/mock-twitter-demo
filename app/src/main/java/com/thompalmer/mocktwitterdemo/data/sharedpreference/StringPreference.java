@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import javax.inject.Inject;
 
-public class StringPreference implements SharePreferencesWrapper<String> {
+public class StringPreference implements SharePreferenceWrapper<String> {
     private final SharedPreferences preferences;
     private final String key;
     private final String defaultValue;
