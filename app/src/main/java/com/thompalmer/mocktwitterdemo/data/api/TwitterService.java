@@ -7,7 +7,7 @@ import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
-public interface UserService {
+public interface TwitterService {
     @POST("/api/1.1/user/")
-    Observable<LoginResponse> loginUser(@Body LoginRequest loginRequest);
+    Observable<LoginResponse> login(@Body LoginRequest loginRequest);
 }

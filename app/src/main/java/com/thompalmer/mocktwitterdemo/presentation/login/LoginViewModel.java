@@ -4,7 +4,6 @@ import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.view.View;
 
-import com.thompalmer.mocktwitterdemo.R;
 import com.thompalmer.mocktwitterdemo.base.BaseViewModel;
 
 import javax.inject.Inject;
@@ -60,10 +59,10 @@ public class LoginViewModel extends BaseViewModel {
             presenter.performLoginAttempt(email, password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(success -> {
+                    .subscribe(loginResponse -> {
                         loggingIn.set(false);
-                        if (!success) {
-                            viewBinding.textInputLayoutPassword.setError(context.getString(R.string.error_incorrect_password));
+                        if (loginResponse.error != null) {
+                            viewBinding.textInputLayoutPassword.setError(loginResponse.error.message);
                         } else {
                             // TODO Move to next activity
                         }
