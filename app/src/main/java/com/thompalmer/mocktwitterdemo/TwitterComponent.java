@@ -1,6 +1,6 @@
 package com.thompalmer.mocktwitterdemo;
 
-import com.thompalmer.mocktwitterdemo.data.ApiModule;
+import com.thompalmer.mocktwitterdemo.data.api.ApiModule;
 import com.thompalmer.mocktwitterdemo.domain.UseCaseModule;
 
 import dagger.Component;

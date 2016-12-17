@@ -1,4 +1,4 @@
-package com.thompalmer.mocktwitterdemo.data;
+package com.thompalmer.mocktwitterdemo.data.api;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.thompalmer.mocktwitterdemo.ApplicationScope;
