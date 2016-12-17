@@ -1,8 +1,7 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
 import com.thompalmer.mocktwitterdemo.ApplicationScope;
-import com.thompalmer.mocktwitterdemo.data.api.MockTwitterService;
-import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
+import com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer;
 
 import dagger.Module;
 import dagger.Provides;
@@ -11,7 +10,7 @@ import dagger.Provides;
 public class UseCaseModule {
     @Provides
     @ApplicationScope
-    AttemptUserLogin provideUserLoginAttempt(MockTwitterService twitterService) {
+    AttemptUserLogin provideUserLoginAttempt(LocalTwitterServer twitterService) {
         return new AttemptUserLogin(twitterService);
     }
 }

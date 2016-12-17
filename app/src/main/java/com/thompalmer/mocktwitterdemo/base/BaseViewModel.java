@@ -2,14 +2,14 @@ package com.thompalmer.mocktwitterdemo.base;
 
 import android.content.Context;
 
-import com.thompalmer.mocktwitterdemo.MockTwitterApp;
-import com.thompalmer.mocktwitterdemo.MockTwitterComponent;
+import com.thompalmer.mocktwitterdemo.TwitterApp;
+import com.thompalmer.mocktwitterdemo.TwitterComponent;
 
 public abstract class BaseViewModel {
-    protected MockTwitterComponent baseComponent;
+    protected TwitterComponent baseComponent;
 
     public BaseViewModel(Context context) {
-        baseComponent = MockTwitterApp.get(context).component();
+        baseComponent = TwitterApp.get(context).component();
         buildComponentAndInject();
     }
 

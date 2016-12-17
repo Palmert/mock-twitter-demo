@@ -48,7 +48,7 @@ public class LoginPresenter {
         return !password.isEmpty() && password.length() >= 8;
     }
 
-    public boolean shouldValidateCredentials(String email, String password) {
+    public boolean hasValidCredentialsForLoginAttempt(String email, String password) {
         return isEmailValid(email) && isPasswordValid(password);
     }
 

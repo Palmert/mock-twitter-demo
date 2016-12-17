@@ -8,11 +8,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class MockTwitterAppModule {
+public class TwitterAppModule {
 
     private Application application;
 
-    public MockTwitterAppModule(Application application) {
+    public TwitterAppModule(Application application) {
         this.application = application;
     }
 

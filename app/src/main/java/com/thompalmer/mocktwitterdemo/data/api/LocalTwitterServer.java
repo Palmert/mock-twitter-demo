@@ -11,7 +11,7 @@ import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.mock.BehaviorDelegate;
 
-public final class MockTwitterService implements TwitterService {
+public final class LocalTwitterServer implements TwitterService {
     public static final int ERROR_UNAUTHORIZED = 401;
     public static final String MESSAGE_INVALID_PASSWORD = "Invalid username/password";
     public static final String MESSAGE_USER_DOES_NOT_EXIST = "Username does not exist";
@@ -19,7 +19,7 @@ public final class MockTwitterService implements TwitterService {
     private final Map<String, String> userAccounts;
     private UserSession userSession;
 
-    public MockTwitterService(BehaviorDelegate<TwitterService> delegate) {
+    public LocalTwitterServer(BehaviorDelegate<TwitterService> delegate) {
         this.delegate = delegate;
         userAccounts = new HashMap<>();
 

@@ -3,11 +3,11 @@ package com.thompalmer.mocktwitterdemo;
 import android.app.Application;
 import android.content.Context;
 
-public class MockTwitterApp extends Application {
-    private MockTwitterComponent component;
+public class TwitterApp extends Application {
+    private TwitterComponent component;
 
-    public static MockTwitterApp get(Context context) {
-        return (MockTwitterApp) context.getApplicationContext();
+    public static TwitterApp get(Context context) {
+        return (TwitterApp) context.getApplicationContext();
     }
 
     @Override
@@ -17,11 +17,11 @@ public class MockTwitterApp extends Application {
     }
 
     public void buildComponentAndInject() {
-        component = MockTwitterComponent.Initializer.init(this);
+        component = TwitterComponent.Initializer.init(this);
         component.inject(this);
     }
 
-    public MockTwitterComponent component() {
+    public TwitterComponent component() {
         return component;
     }
 }

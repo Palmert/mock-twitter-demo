@@ -29,7 +29,7 @@ public class LoginViewModel extends BaseViewModel {
     @Override
     protected void buildComponentAndInject() {
         DaggerLoginComponent.builder()
-                .mockTwitterComponent(baseComponent)
+                .twitterComponent(baseComponent)
                 .build()
                 .inject(this);
     }
@@ -54,7 +54,7 @@ public class LoginViewModel extends BaseViewModel {
             return;
         }
 
-        if (presenter.shouldValidateCredentials(email, password)) {
+        if (presenter.hasValidCredentialsForLoginAttempt(email, password)) {
             loggingIn.set(true);
             presenter.performLoginAttempt(email, password)
                     .subscribeOn(Schedulers.io())

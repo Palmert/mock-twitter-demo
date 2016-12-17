@@ -20,6 +20,7 @@ public class LoginPresenterTest {
 
     @Mock
     AttemptUserLogin attemptUserLogin;
+
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -28,6 +29,26 @@ public class LoginPresenterTest {
     @Before
     public void setup() {
         presenter = new LoginPresenter(attemptUserLogin);
+    }
+
+    @Test
+    public void hasValidCredentialsForLoginAttempt_invalidEmail_validPassword() {
+        assertEquals(presenter.hasValidCredentialsForLoginAttempt(INVALID_EMAIL_DOMAIN_ONLY, VALID_PASSWORD), false);
+    }
+
+    @Test
+    public void hasValidCredentialsForLoginAttempt_invalidEmail_invalidPassword() {
+        assertEquals(presenter.hasValidCredentialsForLoginAttempt(INVALID_EMAIL_DOMAIN_ONLY, INVALID_PASSWORD_TOO_SHORT), false);
+    }
+
+    @Test
+    public void hasValidCredentialsForLoginAttempt_validEmail_invalidPassword() {
+        assertEquals(presenter.hasValidCredentialsForLoginAttempt(VALID_EMAIL, INVALID_PASSWORD_TOO_SHORT), false);
+    }
+
+    @Test
+    public void hasValidCredentialsForLoginAttempt_validEmail_validPassword() {
+        assertEquals(presenter.hasValidCredentialsForLoginAttempt(VALID_EMAIL, VALID_PASSWORD), true);
     }
 
     @Test
