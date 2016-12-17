@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import javax.inject.Inject;
 
-public class StringPreference {
+public class StringPreference implements SharePreferencesWrapper<String> {
     private final SharedPreferences preferences;
     private final String key;
     private final String defaultValue;
@@ -16,11 +16,18 @@ public class StringPreference {
         this.defaultValue = defaultValue;
     }
 
+    @Override
     public String get() {
         return preferences.getString(key, defaultValue);
     }
 
+    @Override
     public void set(String value) {
         preferences.edit().putString(key, value).apply();
+    }
+
+    @Override
+    public void remove() {
+        preferences.edit().remove(key).apply();
     }
 }
