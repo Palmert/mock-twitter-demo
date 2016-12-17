@@ -1,19 +1,29 @@
 package com.thompalmer.mocktwitterdemo.presentation.feed;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.R;
+import com.thompalmer.mocktwitterdemo.TwitterApp;
+import com.thompalmer.mocktwitterdemo.presentation.login.LoginActivity;
+
+import javax.inject.Inject;
 
 public class TweetActivity extends AppCompatActivity {
+    @Inject TweetPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        buildComponentAndInject();
         setContentView(R.layout.activity_tweet);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -28,4 +38,27 @@ public class TweetActivity extends AppCompatActivity {
         });
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_tweet, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.logout) {
+            presenter.onLogoutPressed();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void buildComponentAndInject() {
+        DaggerTweetComponent.builder()
+                .twitterComponent(TwitterApp.get(this).component())
+                .build()
+                .inject(this);
+    }
 }
