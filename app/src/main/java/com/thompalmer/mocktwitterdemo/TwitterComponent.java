@@ -17,7 +17,6 @@ public interface TwitterComponent extends TwitterGraph {
         static TwitterComponent init(TwitterApplication app) {
             return DaggerTwitterComponent.builder()
                     .twitterAppModule(new TwitterAppModule(app))
-                    .databaseModule(new DatabaseModule())
                     .build();
         }
     }
