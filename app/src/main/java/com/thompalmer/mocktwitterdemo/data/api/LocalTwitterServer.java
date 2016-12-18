@@ -1,14 +1,22 @@
 package com.thompalmer.mocktwitterdemo.data.api;
 
-import com.thompalmer.mocktwitterdemo.data.api.model.request.LoginRequest;
-import com.thompalmer.mocktwitterdemo.data.api.model.response.LoginResponse;
+import android.database.Cursor;
 
+import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
+import com.thompalmer.mocktwitterdemo.data.api.model.request.LoginRequest;
+import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
+import com.thompalmer.mocktwitterdemo.data.api.model.response.LoginResponse;
+import com.thompalmer.mocktwitterdemo.data.db.common.SqlTweet;
+import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.Path;
 import retrofit2.mock.BehaviorDelegate;
 
 public final class LocalTwitterServer implements TwitterService {
@@ -18,26 +26,15 @@ public final class LocalTwitterServer implements TwitterService {
     private final BehaviorDelegate<TwitterService> delegate;
     private final Map<String, String> userAccounts;
     private UserSession userSession;
+    private final TwitterServerDatabase db;
 
-    public LocalTwitterServer(BehaviorDelegate<TwitterService> delegate) {
+    public LocalTwitterServer(BehaviorDelegate<TwitterService> delegate, TwitterServerDatabase db) {
         this.delegate = delegate;
+        this.db = db;
         userAccounts = new HashMap<>();
 
         addUserAccount("thomapalmer@gmail.com", "password1");
     }
-
-//        @Override
-//        public Call<List<Contributor>> contributors(String owner, String repo) {
-//            List<Contributor> response = Collections.emptyList();
-//            Map<String, List<Contributor>> repoContributors = userAccounts.get(owner);
-//            if (repoContributors != null) {
-//                List<Contributor> contributors = repoContributors.get(repo);
-//                if (contributors != null) {
-//                    response = contributors;
-//                }
-//            }
-//            return delegate.returningResponse(response).contributors(owner, repo);
-//        }
 
     void addUserAccount(String email, String password) {
         userAccounts.put(email, password);
@@ -57,5 +54,39 @@ public final class LocalTwitterServer implements TwitterService {
                     userAccounts.containsKey(email) ? MESSAGE_INVALID_PASSWORD : MESSAGE_USER_DOES_NOT_EXIST);
         }
         return delegate.returningResponse(response).login(loginRequest);
+    }
+
+    @Override
+    public Observable<ListTweetsResponse> listTweets(@Path("count") String count, @Path("createdAt") String lastCreatedAt) {
+        Cursor cursor;
+        if (lastCreatedAt == null) {
+            cursor = db.get().query(SqlTweet.LIST, count);
+        } else {
+            cursor = db.get().query(SqlTweet.LIST_WITH_CREATED_AT, lastCreatedAt, count);
+        }
+
+        ListTweetsResponse listTweetsResponse = new ListTweetsResponse();
+        listTweetsResponse.tweets = new ArrayList<>();
+
+        try {
+            while (cursor.moveToNext()) {
+                Tweet tweet = new Tweet();
+                tweet.text = cursor.getString(cursor.getColumnIndex(SqlTweet.TEXT));
+                tweet.replyCount = cursor.getInt(cursor.getColumnIndex(SqlTweet.REPLY_COUNT));
+                tweet.retweetCount = cursor.getInt(cursor.getColumnIndex(SqlTweet.RETWEET_COUNT));
+                tweet.likeCount = cursor.getInt(cursor.getColumnIndex(SqlTweet.LIKE_COUNT));
+                tweet.userName = cursor.getString(cursor.getColumnIndex(SqlTweet.USER_NAME));
+                tweet.createdAt = cursor.getString(cursor.getColumnIndex(SqlTweet.CREATED_AT));
+                tweet.updatedAt = cursor.getString(cursor.getColumnIndex(SqlTweet.UPDATED_AT));
+                tweet.deletedAt = cursor.getString(cursor.getColumnIndex(SqlTweet.DELETED_AT));
+
+                listTweetsResponse.tweets.add(tweet);
+            }
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
+        }
+        return delegate.returningResponse(listTweetsResponse).listTweets(count, lastCreatedAt);
     }
 }

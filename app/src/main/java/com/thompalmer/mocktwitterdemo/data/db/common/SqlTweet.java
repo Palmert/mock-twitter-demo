@@ -39,9 +39,13 @@ public class SqlTweet {
                     UPDATED_AT + " TEXT NOT NULL, " +
                     DELETED_AT + " TEXT DEFAULT NULL)";
 
-    public static final String QUERY = "SELECT * FROM " + TABLE +
-            " WHERE " + DELETED_AT + " IS NULL";
+    public static final String LIST = "SELECT * FROM " + TABLE +
+            " WHERE "  + DELETED_AT + " IS NULL" +
+            " ORDER BY " + CREATED_AT + " LIMIT ? ";
 
+    public static final String LIST_WITH_CREATED_AT = "SELECT * FROM " + TABLE +
+            " WHERE " + CREATED_AT +  " < ? AND " + DELETED_AT + " IS NULL" +
+            " ORDER BY " + CREATED_AT + " LIMIT ? ";
 
     public static ContentValues build(String text, int replyCount, int retweetCount, int likeCount,
                                       String userName, String createdAt, String updatedAt, String deletedAt) {

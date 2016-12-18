@@ -15,7 +15,7 @@ public class TwitterServerDatabase {
         db = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
     }
 
-    public BriteDatabase getDb() {
+    public BriteDatabase get() {
         return db;
     }
 }
