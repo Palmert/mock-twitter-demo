@@ -1,10 +1,11 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
+import com.squareup.sqlbrite.BriteDatabase;
 import com.thompalmer.mocktwitterdemo.ApplicationScope;
 import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
-import com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase;
-import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserSessionStorage;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,13 +26,14 @@ public class DomainModule {
 
     @Provides
     @ApplicationScope
-    PerformLogout providePerformLogout(UserSessionPersister sessionPersister, TwitterServerDatabase serverDb, TwitterDatabase db) {
+    PerformLogout providePerformLogout(UserSessionPersister sessionPersister, @Named("TwitterServerDb") BriteDatabase serverDb,
+                                       @Named("TwitterDb") BriteDatabase db) {
         return new PerformLogout(sessionPersister, serverDb, db);
     }
 
     @Provides
     @ApplicationScope
-    ListTweets provideListTweets(TwitterService twitterService, TwitterDatabase twitterDatabase, UserSessionPersister sessionPersister) {
+    ListTweets provideListTweets(TwitterService twitterService, @Named("TwitterDb") BriteDatabase twitterDatabase, UserSessionPersister sessionPersister) {
         return new ListTweets(twitterService, twitterDatabase, sessionPersister);
     }
 

@@ -9,16 +9,17 @@ import com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase;
 import com.thompalmer.mocktwitterdemo.data.db.common.SqlTweet;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reactivex.Observable;
 
 public class ListTweets {
     private final TwitterService twitterService;
-    private final TwitterDatabase db;
+    private final @Named("TwitterDb") BriteDatabase db;
     private final UserSessionPersister sessionPersister;
 
     @Inject
-    public ListTweets(TwitterService twitterService, TwitterDatabase db, UserSessionPersister sessionPersister) {
+    public ListTweets(TwitterService twitterService, BriteDatabase db, UserSessionPersister sessionPersister) {
         this.twitterService = twitterService;
         this.db = db;
         this.sessionPersister = sessionPersister;
@@ -30,9 +31,9 @@ public class ListTweets {
     }
 
     private void persistTweetsResponse(ListTweetsResponse listTweetsResponse) {
-        BriteDatabase.Transaction transaction = db.get().newTransaction();
+        BriteDatabase.Transaction transaction = db.newTransaction();
         for(Tweet tweet : listTweetsResponse.success.tweets) {
-            db.get().insert(SqlTweet.TABLE, SqlTweet.build(tweet));
+            db.insert(SqlTweet.TABLE, SqlTweet.build(tweet));
         }
         transaction.markSuccessful();
         transaction.end();

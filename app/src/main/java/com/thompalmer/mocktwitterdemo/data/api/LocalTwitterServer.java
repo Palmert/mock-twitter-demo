@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.squareup.sqlbrite.BriteDatabase;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.request.LoginRequest;
 import com.thompalmer.mocktwitterdemo.data.api.model.request.PostTweetRequest;
@@ -13,7 +14,6 @@ import com.thompalmer.mocktwitterdemo.data.api.model.response.TweetResponse;
 import com.thompalmer.mocktwitterdemo.data.db.common.SqlTweet;
 import com.thompalmer.mocktwitterdemo.data.db.server.SqlAccount;
 import com.thompalmer.mocktwitterdemo.data.db.server.SqlSession;
-import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -21,6 +21,8 @@ import org.joda.time.DateTimeZone;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.inject.Named;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
@@ -34,9 +36,9 @@ public class LocalTwitterServer implements TwitterService {
     public static final String MESSAGE_USER_DOES_NOT_EXIST = "Username does not exist";
     public static final String MESSAGE_FAILED_AUTHENTICATION = "Failed Authentication";
     private final BehaviorDelegate<TwitterService> delegate;
-    private final TwitterServerDatabase db;
+    private final @Named("TwitterServerDb") BriteDatabase db;
 
-    public LocalTwitterServer(BehaviorDelegate<TwitterService> delegate, TwitterServerDatabase db) {
+    public LocalTwitterServer(BehaviorDelegate<TwitterService> delegate, BriteDatabase db) {
         this.delegate = delegate;
         this.db = db;
     }
@@ -47,7 +49,7 @@ public class LocalTwitterServer implements TwitterService {
         String password = loginRequest.getPassword();
         LoginResponse response;
 
-        Cursor cursor = db.get().query(SqlAccount.QUERY, loginRequest.getEmail());
+        Cursor cursor = db.query(SqlAccount.QUERY, loginRequest.getEmail());
         try {
             if (cursor.moveToFirst()) {
                 String userPassword = cursor.getString(cursor.getColumnIndex(SqlAccount.PASSWORD));
@@ -74,7 +76,7 @@ public class LocalTwitterServer implements TwitterService {
         Long authToken = new Random().nextLong();
         String now = DateTime.now(DateTimeZone.UTC).toString();
         ContentValues values = SqlSession.build(email, authToken, now, now, null);
-        db.get().insert(SqlSession.TABLE, values);
+        db.insert(SqlSession.TABLE, values);
         return authToken;
     }
 
@@ -89,7 +91,7 @@ public class LocalTwitterServer implements TwitterService {
             String now = DateTime.now(DateTimeZone.UTC).toString();
             tweet.createdAt = now;
             tweet.updatedAt = now;
-            db.get().insert(SqlTweet.TABLE, SqlTweet.build(tweet));
+            db.insert(SqlTweet.TABLE, SqlTweet.build(tweet));
             response = TweetResponse.success(tweet);
         } else {
             response = TweetResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_FAILED_AUTHENTICATION);
@@ -99,13 +101,13 @@ public class LocalTwitterServer implements TwitterService {
     }
 
     private boolean isAuthenticated(    String userName, long authToken) {
-        Cursor cursor = db.get().query(SqlSession.QUERY, userName, String.valueOf(authToken));
+        Cursor cursor = db.query(SqlSession.QUERY, userName, String.valueOf(authToken));
         return cursor.getCount() == 1;
     }
 
     private String getUserName( String email) {
         String fullName = email;
-        Cursor cursor = db.get().query(SqlAccount.QUERY, email);
+        Cursor cursor = db.query(SqlAccount.QUERY, email);
         if(cursor.moveToFirst()) {
             String firstName = cursor.getString(cursor.getColumnIndex(SqlAccount.FIRST_NAME));
             String lastName = cursor.getString(cursor.getColumnIndex(SqlAccount.LAST_NAME));
@@ -121,9 +123,9 @@ public class LocalTwitterServer implements TwitterService {
         Cursor cursor;
         if (isAuthenticated(userName, authToken)) {
             if (lastCreatedAt == null) {
-                cursor = db.get().query(SqlTweet.LIST, count);
+                cursor = db.query(SqlTweet.LIST, count);
             } else {
-                cursor = db.get().query(SqlTweet.LIST_WITH_CREATED_AT, lastCreatedAt, count);
+                cursor = db.query(SqlTweet.LIST_WITH_CREATED_AT, lastCreatedAt, count);
             }
 
             List<Tweet> tweets = new ArrayList<>();
