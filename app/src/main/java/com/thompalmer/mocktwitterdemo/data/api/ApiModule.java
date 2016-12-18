@@ -2,8 +2,7 @@ package com.thompalmer.mocktwitterdemo.data.api;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.thompalmer.mocktwitterdemo.ApplicationScope;
-import com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer;
-import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
+import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
 
 import dagger.Module;
 import dagger.Provides;
@@ -49,9 +48,9 @@ public class ApiModule {
 
     @Provides
     @ApplicationScope
-    LocalTwitterServer provideMockTwitterService(MockRetrofit mockRetrofit) {
+    LocalTwitterServer provideMockTwitterService(MockRetrofit mockRetrofit, TwitterServerDatabase db) {
         BehaviorDelegate<TwitterService> twitter = mockRetrofit.create(TwitterService.class);
-        return new LocalTwitterServer(twitter);
+        return new LocalTwitterServer(twitter, db);
     }
 
     @Provides

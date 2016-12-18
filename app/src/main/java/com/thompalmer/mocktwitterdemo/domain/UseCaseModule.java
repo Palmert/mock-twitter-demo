@@ -1,6 +1,7 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
 import com.thompalmer.mocktwitterdemo.ApplicationScope;
+import com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
@@ -14,15 +15,20 @@ import dagger.Provides;
 public class UseCaseModule {
     @Provides
     @ApplicationScope
-    AttemptUserLogin provideAttemptUserLogin(LocalTwitterServer twitterService, @UserEmailPref StringPreference userEmailPref,
+    AttemptUserLogin provideAttemptUserLogin(LocalTwitterServer localTwitterServer, @UserEmailPref StringPreference userEmailPref,
                                              @AuthTokenPref LongPreference authTokenPref) {
-        return new AttemptUserLogin(twitterService, userEmailPref, authTokenPref);
+        return new AttemptUserLogin(localTwitterServer, userEmailPref, authTokenPref);
     }
 
     @Provides
     @ApplicationScope
-    PerformLogout providePerformLogout(@UserEmailPref StringPreference userEmailPref,
-                                             @AuthTokenPref LongPreference authTokenPref) {
+    PerformLogout providePerformLogout(@UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref) {
         return new PerformLogout(userEmailPref, authTokenPref);
+    }
+
+    @Provides
+    @ApplicationScope
+    ListTweets provideListTweets(LocalTwitterServer localTwitterServer, TwitterDatabase twitterDatabase) {
+        return new ListTweets(localTwitterServer, twitterDatabase);
     }
 }

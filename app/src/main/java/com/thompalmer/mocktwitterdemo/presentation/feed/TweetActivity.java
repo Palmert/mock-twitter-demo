@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,9 +14,14 @@ import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.R;
 import com.thompalmer.mocktwitterdemo.TwitterApplication;
+import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
 import com.thompalmer.mocktwitterdemo.presentation.login.LoginActivity;
 
 import javax.inject.Inject;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class TweetActivity extends AppCompatActivity {
     @Inject TweetPresenter presenter;
@@ -27,7 +33,15 @@ public class TweetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tweet);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        presenter.listTweets()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ListTweetsResponse>() {
+                    @Override
+                    public void accept(ListTweetsResponse listTweetsResponse) throws Exception {
+                        Log.d("Total tweets", String.valueOf(listTweetsResponse.tweets.size()));
+                    }
+                });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
