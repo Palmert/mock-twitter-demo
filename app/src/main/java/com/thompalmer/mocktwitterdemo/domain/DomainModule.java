@@ -1,9 +1,9 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
 import com.thompalmer.mocktwitterdemo.ApplicationScope;
+import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
 import com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase;
 import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
-import com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserSessionStorage;
 
 import dagger.Module;
@@ -19,8 +19,8 @@ public class DomainModule {
 
     @Provides
     @ApplicationScope
-    AttemptUserLogin provideAttemptUserLogin(LocalTwitterServer localTwitterServer, UserSessionPersister sessionPersister) {
-        return new AttemptUserLogin(localTwitterServer, sessionPersister);
+    AttemptUserLogin provideAttemptUserLogin(TwitterService twitterService, UserSessionPersister sessionPersister) {
+        return new AttemptUserLogin(twitterService, sessionPersister);
     }
 
     @Provides
@@ -31,13 +31,13 @@ public class DomainModule {
 
     @Provides
     @ApplicationScope
-    ListTweets provideListTweets(LocalTwitterServer localTwitterServer, TwitterDatabase twitterDatabase, UserSessionPersister sessionPersister) {
-        return new ListTweets(localTwitterServer, twitterDatabase, sessionPersister);
+    ListTweets provideListTweets(TwitterService twitterService, TwitterDatabase twitterDatabase, UserSessionPersister sessionPersister) {
+        return new ListTweets(twitterService, twitterDatabase, sessionPersister);
     }
 
     @Provides
     @ApplicationScope
-    CreateTweet providesCreateTweet(LocalTwitterServer localTwitterServer, UserSessionPersister sessionPersister) {
-        return new CreateTweet(localTwitterServer, sessionPersister);
+    CreateTweet providesCreateTweet(TwitterService twitterService, UserSessionPersister sessionPersister) {
+        return new CreateTweet(twitterService, sessionPersister);
     }
 }

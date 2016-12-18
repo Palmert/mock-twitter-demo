@@ -29,9 +29,9 @@ import retrofit2.http.Path;
 import retrofit2.mock.BehaviorDelegate;
 
 public class LocalTwitterServer implements TwitterService {
-    private static final int ERROR_UNAUTHORIZED = 401;
-    private static final String MESSAGE_INVALID_PASSWORD = "Invalid username/password";
-    private static final String MESSAGE_USER_DOES_NOT_EXIST = "Username does not exist";
+    public static final int ERROR_UNAUTHORIZED = 401;
+    public static final String MESSAGE_INVALID_PASSWORD = "Invalid username/password";
+    public static final String MESSAGE_USER_DOES_NOT_EXIST = "Username does not exist";
     public static final String MESSAGE_FAILED_AUTHENTICATION = "Failed Authentication";
     private final BehaviorDelegate<TwitterService> delegate;
     private final TwitterServerDatabase db;

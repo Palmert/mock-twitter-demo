@@ -48,14 +48,8 @@ public class ApiModule {
 
     @Provides
     @ApplicationScope
-    LocalTwitterServer provideMockTwitterService(MockRetrofit mockRetrofit, TwitterServerDatabase db) {
+    TwitterService provideMockTwitterService(MockRetrofit mockRetrofit, TwitterServerDatabase db) {
         BehaviorDelegate<TwitterService> twitter = mockRetrofit.create(TwitterService.class);
         return new LocalTwitterServer(twitter, db);
-    }
-
-    @Provides
-    @ApplicationScope
-    TwitterService provideTwitterService(Retrofit retrofit) {
-        return retrofit.create(TwitterService.class);
     }
 }
