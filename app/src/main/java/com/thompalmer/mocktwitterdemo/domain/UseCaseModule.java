@@ -2,6 +2,7 @@ package com.thompalmer.mocktwitterdemo.domain;
 
 import com.thompalmer.mocktwitterdemo.ApplicationScope;
 import com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase;
+import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
@@ -22,8 +23,9 @@ public class UseCaseModule {
 
     @Provides
     @ApplicationScope
-    PerformLogout providePerformLogout(@UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref) {
-        return new PerformLogout(userEmailPref, authTokenPref);
+    PerformLogout providePerformLogout(@UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref,
+                                       TwitterServerDatabase serverDb, TwitterDatabase db) {
+        return new PerformLogout(userEmailPref, authTokenPref, serverDb, db);
     }
 
     @Provides
