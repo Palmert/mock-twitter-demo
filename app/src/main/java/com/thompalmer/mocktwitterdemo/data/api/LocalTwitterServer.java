@@ -30,13 +30,15 @@ import retrofit2.http.Header;
 import retrofit2.http.Path;
 import retrofit2.mock.BehaviorDelegate;
 
+import static com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase.*;
+
 public class LocalTwitterServer implements TwitterService {
     public static final int ERROR_UNAUTHORIZED = 401;
     public static final String MESSAGE_INVALID_PASSWORD = "Invalid username/password";
     public static final String MESSAGE_USER_DOES_NOT_EXIST = "Username does not exist";
     public static final String MESSAGE_FAILED_AUTHENTICATION = "Failed Authentication";
     private final BehaviorDelegate<TwitterService> delegate;
-    private final @Named("TwitterServerDb") BriteDatabase db;
+    private final @Named(TWITTER_SERVER_DB) BriteDatabase db;
 
     public LocalTwitterServer(BehaviorDelegate<TwitterService> delegate, BriteDatabase db) {
         this.delegate = delegate;

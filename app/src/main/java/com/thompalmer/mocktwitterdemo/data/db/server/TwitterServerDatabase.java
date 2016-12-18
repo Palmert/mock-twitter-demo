@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import rx.schedulers.Schedulers;
 
 public class TwitterServerDatabase implements DatabaseInteractor{
+    public static final String TWITTER_SERVER_DB = "TwitterServerDb";
     private final BriteDatabase db;
 
     @Inject

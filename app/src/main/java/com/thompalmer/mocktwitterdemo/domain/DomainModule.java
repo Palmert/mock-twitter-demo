@@ -10,8 +10,12 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 
+import static com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase.*;
+import static com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase.*;
+
 @Module
 public class DomainModule {
+
     @Provides
     @ApplicationScope
     UserSessionPersister providesUserSessionPersister(UserSessionStorage userSessionStorage) {
@@ -26,20 +30,20 @@ public class DomainModule {
 
     @Provides
     @ApplicationScope
-    PerformLogout providePerformLogout(UserSessionPersister sessionPersister, @Named("TwitterServerDb") BriteDatabase serverDb,
-                                       @Named("TwitterDb") BriteDatabase db) {
+    PerformLogout providePerformLogout(UserSessionPersister sessionPersister, @Named(TWITTER_SERVER_DB) BriteDatabase serverDb,
+                                       @Named(TWITTER_DB) BriteDatabase db) {
         return new PerformLogout(sessionPersister, serverDb, db);
     }
 
     @Provides
     @ApplicationScope
-    ListTweets provideListTweets(TwitterService twitterService, @Named("TwitterDb") BriteDatabase twitterDatabase, UserSessionPersister sessionPersister) {
+    ListTweets provideListTweets(TwitterService twitterService, @Named(TWITTER_DB) BriteDatabase twitterDatabase, UserSessionPersister sessionPersister) {
         return new ListTweets(twitterService, twitterDatabase, sessionPersister);
     }
 
     @Provides
     @ApplicationScope
-    CreateTweet providesCreateTweet(TwitterService twitterService, UserSessionPersister sessionPersister) {
-        return new CreateTweet(twitterService, sessionPersister);
+    CreateTweet providesCreateTweet(TwitterService twitterService, UserSessionPersister sessionPersister, @Named(TWITTER_DB) BriteDatabase db) {
+        return new CreateTweet(twitterService, sessionPersister, db);
     }
 }

@@ -15,6 +15,7 @@ import rx.schedulers.Schedulers;
 
 public class TwitterDatabase implements DatabaseInteractor {
 
+    public static final String TWITTER_DB = "TwitterDb";
     private final BriteDatabase db;
 
     @Inject

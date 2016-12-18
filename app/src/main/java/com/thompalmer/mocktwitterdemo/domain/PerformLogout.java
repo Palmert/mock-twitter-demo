@@ -13,10 +13,13 @@ import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase.*;
+import static com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase.*;
+
 public class PerformLogout {
     private final UserSessionPersister sessionPersister;
-    private final @Named("TwitterServerDb") BriteDatabase serverDb;
-    private final @Named("TwitterDb") BriteDatabase db;
+    private final @Named(TWITTER_SERVER_DB) BriteDatabase serverDb;
+    private final @Named(TWITTER_DB) BriteDatabase db;
 
     @Inject
     public PerformLogout(UserSessionPersister sessionPersister, BriteDatabase serverDb, BriteDatabase db) {

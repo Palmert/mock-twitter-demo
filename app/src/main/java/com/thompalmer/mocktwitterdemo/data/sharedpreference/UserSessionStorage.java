@@ -27,7 +27,7 @@ public class UserSessionStorage implements UserSessionPersister {
         return userEmailPref.get();
     }
 
-    public Long getAuthTokenPref() {
+    public Long getAuthToken() {
         return authTokenPref.get();
     }
 
