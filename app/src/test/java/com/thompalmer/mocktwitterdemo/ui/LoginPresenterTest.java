@@ -1,9 +1,13 @@
-package com.thompalmer.mocktwitterdemo;
+package com.thompalmer.mocktwitterdemo.ui;
 
+import com.thompalmer.mocktwitterdemo.R;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
 import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
+import com.thompalmer.mocktwitterdemo.domain.UserSessionPersister;
 import com.thompalmer.mocktwitterdemo.presentation.login.LoginPresenter;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,21 +24,20 @@ public class LoginPresenterTest {
     private static final String INVALID_EMAIL_DOMAIN_ONLY = "thom.com";
     private static final String VALID_EMAIL = "thomapalmer@gmail.com";
 
-    @Mock
-    AttemptUserLogin attemptUserLogin;
-    @Mock
-    StringPreference userEmailPref;
-    @Mock
-    LongPreference authTokenPref;
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+    @Mock
+    AttemptUserLogin attemptUserLogin;
+
+    @Mock
+    UserSessionPersister userSessionPersister;
 
     private LoginPresenter presenter;
 
     @Before
     public void setup() {
-        presenter = new LoginPresenter(attemptUserLogin, userEmailPref, authTokenPref);
+        presenter = new LoginPresenter(attemptUserLogin, userSessionPersister);
     }
 
     @Test
@@ -69,7 +72,7 @@ public class LoginPresenterTest {
 
     @Test
     public void updatePasswordMessageId_emptyPassword() {
-        assertEquals(presenter.updatePasswordMessageId(""), R.string.error_field_required);
+        Assert.assertEquals(presenter.updatePasswordMessageId(""), R.string.error_field_required);
     }
 
     @Test

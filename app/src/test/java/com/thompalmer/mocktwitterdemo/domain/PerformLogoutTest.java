@@ -11,22 +11,29 @@ import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
 
 import javax.inject.Inject;
 
-public class PerformLogout {
-    private final UserSessionPersister sessionPersister;
+public class PerformLogoutTest {
+    private final StringPreference userEmailPref;
+    private final LongPreference authTokenPref;
     private final TwitterServerDatabase serverDb;
     private final TwitterDatabase db;
 
     @Inject
-    public PerformLogout(UserSessionPersister sessionPersister, TwitterServerDatabase serverDb, TwitterDatabase db) {
-        this.sessionPersister = sessionPersister;
+    public PerformLogoutTest(@UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref,
+                             TwitterServerDatabase serverDb, TwitterDatabase db) {
+        this.userEmailPref = userEmailPref;
+        this.authTokenPref = authTokenPref;
         this.serverDb = serverDb;
         this.db = db;
     }
 
     public void execute() {
-        sessionPersister.clear();
+        clearSessionInfo();
         db.get().delete(SqlTweet.TABLE, null);
         serverDb.get().delete(SqlSession.TABLE, null);
     }
 
+    private void clearSessionInfo() {
+        userEmailPref.remove();
+        authTokenPref.remove();
+    }
 }
