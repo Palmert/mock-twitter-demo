@@ -26,10 +26,9 @@ public class SqlTweet {
     public static final String UPDATED_AT = "updated_at";
     public static final String DELETED_AT = "deleted_at";
 
-
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE + " (" +
-                    ID + " INTEGER PRIMARY KEY, " +
+                    ID + " TEXT PRIMARY KEY, " +
                     TEXT + " TEXT NOT NULL, " +
                     REPLY_COUNT + " INTEGER DEFAULT 0, " +
                     RETWEET_COUNT + " INTEGER DEFAULT 0, " +
@@ -41,7 +40,7 @@ public class SqlTweet {
 
     public static final String LIST = "SELECT * FROM " + TABLE +
             " WHERE "  + DELETED_AT + " IS NULL" +
-            " ORDER BY " + CREATED_AT + " LIMIT ? ";
+            " ORDER BY " + CREATED_AT + " DESC LIMIT ? ";
 
     public static final String LIST_WITH_CREATED_AT = "SELECT * FROM " + TABLE +
             " WHERE " + CREATED_AT +  " < ? AND " + DELETED_AT + " IS NULL" +
@@ -57,7 +56,11 @@ public class SqlTweet {
         values.put(USER_NAME, userName);
         values.put(CREATED_AT, createdAt);
         values.put(UPDATED_AT, updatedAt);
-        values.put(DELETED_AT, deletedAt);
+        if(deletedAt == null) {
+            values.putNull(DELETED_AT);
+        } else {
+            values.put(DELETED_AT, deletedAt);
+        }
         return values;
     }
 
