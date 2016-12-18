@@ -1,5 +1,7 @@
 package com.thompalmer.mocktwitterdemo;
 
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
 import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
 import com.thompalmer.mocktwitterdemo.presentation.login.LoginPresenter;
 
@@ -20,6 +22,10 @@ public class LoginPresenterTest {
 
     @Mock
     AttemptUserLogin attemptUserLogin;
+    @Mock
+    StringPreference userEmailPref;
+    @Mock
+    LongPreference authTokenPref;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -28,7 +34,7 @@ public class LoginPresenterTest {
 
     @Before
     public void setup() {
-        presenter = new LoginPresenter(attemptUserLogin);
+        presenter = new LoginPresenter(attemptUserLogin, userEmailPref, authTokenPref);
     }
 
     @Test

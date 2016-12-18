@@ -7,19 +7,20 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.thompalmer.mocktwitterdemo.R;
 import com.thompalmer.mocktwitterdemo.TwitterApplication;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.HasCurrentSession;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
 import com.thompalmer.mocktwitterdemo.presentation.feed.FeedActivity;
 
 import javax.inject.Inject;
 
 public class LoginActivity extends AppCompatActivity {
-    @Inject @HasCurrentSession Boolean hasCurrentSession;
+    @Inject LoginPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildComponentAndInject();
-        if(hasCurrentSession) {
+        if(presenter.hasValidSession()) {
             Intent intent = new Intent(this, FeedActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

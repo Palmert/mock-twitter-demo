@@ -2,6 +2,10 @@ package com.thompalmer.mocktwitterdemo.presentation.login;
 
 import com.thompalmer.mocktwitterdemo.R;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.LoginResponse;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
 import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
 
 import javax.inject.Inject;
@@ -10,10 +14,14 @@ import io.reactivex.Observable;
 
 public class LoginPresenter {
     private final AttemptUserLogin attemptUserLogin;
+    private final @UserEmailPref StringPreference userEmailPref;
+    private final @AuthTokenPref LongPreference authTokenPref;
 
     @Inject
-    public LoginPresenter(AttemptUserLogin attemptUserLogin) {
+    public LoginPresenter(AttemptUserLogin attemptUserLogin, StringPreference userEmailPref, LongPreference authTokenPref) {
         this.attemptUserLogin = attemptUserLogin;
+        this.userEmailPref = userEmailPref;
+        this.authTokenPref = authTokenPref;
     }
 
     public int updateEmailMessageId(String email) {
@@ -54,5 +62,9 @@ public class LoginPresenter {
 
     public Observable<LoginResponse> performLoginAttempt(String email, String password) {
         return attemptUserLogin.execute(email, password);
+    }
+
+    public boolean hasValidSession () {
+        return userEmailPref.get() != null && authTokenPref.get() != -1L;
     }
 }
