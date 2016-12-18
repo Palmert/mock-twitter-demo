@@ -1,10 +1,10 @@
 package com.thompalmer.mocktwitterdemo.data.api.model.entity;
 
-public class Success {
+public class LoginSuccess {
     public String email;
     public Long authToken;
 
-    public Success(String email, Long authToken) {
+    public LoginSuccess(String email, Long authToken) {
         this.email = email;
         this.authToken = authToken;
     }

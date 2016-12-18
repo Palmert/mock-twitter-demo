@@ -27,14 +27,14 @@ public class AttemptUserLogin {
 
     public Observable<LoginResponse> execute(String email, String password) {
         return twitterService.login(LoginRequest.create(email, password)).doOnNext(loginResponse -> {
-            if(loginResponse.success != null) {
+            if(loginResponse.loginSuccess != null) {
                 persistSessionInfo(loginResponse);
             }
         });
     }
 
     private void persistSessionInfo(LoginResponse loginResponse) {
-        userEmailPref.set(loginResponse.success.email);
-        authTokenPref.set(loginResponse.success.authToken);
+        userEmailPref.set(loginResponse.loginSuccess.email);
+        authTokenPref.set(loginResponse.loginSuccess.authToken);
     }
 }

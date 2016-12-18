@@ -1,10 +1,10 @@
 package com.thompalmer.mocktwitterdemo.data.api.model.response;
 
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Error;
-import com.thompalmer.mocktwitterdemo.data.api.model.entity.Success;
+import com.thompalmer.mocktwitterdemo.data.api.model.entity.LoginSuccess;
 
 public class LoginResponse {
-    public Success success;
+    public LoginSuccess loginSuccess;
     public Error error;
 
     public static LoginResponse success(String email, Long authToken) {
@@ -16,7 +16,7 @@ public class LoginResponse {
     }
 
     public LoginResponse(String email, Long authToken, Integer code, String message) {
-        this.success = email == null || authToken == null ? null : new Success(email, authToken);
+        this.loginSuccess = email == null || authToken == null ? null : new LoginSuccess(email, authToken);
         this.error = code == null || message == null ? null : new Error(code, message);
     }
 }
