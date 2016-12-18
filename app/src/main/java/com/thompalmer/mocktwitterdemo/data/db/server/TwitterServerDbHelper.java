@@ -41,11 +41,11 @@ public class TwitterServerDbHelper extends SQLiteOpenHelper {
     }
 
     private void seedTweets(SQLiteDatabase db, Gson gson) {
-        ListTweetsResponse listTweetsResponse =
-               gson.fromJson(loadJSONFromAsset("tweets.json"), ListTweetsResponse.class);
+        Type type = new TypeToken<ArrayList<Tweet>>() {}.getType();
+        List<Tweet> tweets = gson.fromJson(loadJSONFromAsset("tweets.json"), type);
         try {
             db.beginTransaction();
-            for(Tweet tweet : listTweetsResponse.tweets) {
+            for(Tweet tweet : tweets) {
                 db.insert(SqlTweet.TABLE, null, SqlTweet.build(tweet));
             }
             db.setTransactionSuccessful();
