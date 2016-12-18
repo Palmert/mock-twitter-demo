@@ -2,6 +2,8 @@ package com.thompalmer.mocktwitterdemo.data.db.server;
 
 import android.content.ContentValues;
 
+import com.thompalmer.mocktwitterdemo.data.api.model.entity.Account;
+
 public class SqlAccount {
     public static final String TABLE = "account";
     public static final String EMAIL = "email";
@@ -35,5 +37,9 @@ public class SqlAccount {
             values.put(DELETED_AT, deletedAt);
         }
         return values;
+    }
+
+    public static ContentValues build(Account account) {
+        return build(account.email, account.password, account.createdAt, account.updatedAt, account.deletedAt);
     }
 }

@@ -1,0 +1,16 @@
+Template used to generate tweets on www.json-generator.com
+
+[
+  '{{repeat(1000, 1000)}}',
+  {
+    text: '{{lorem(2, "sentences")}}',
+    replyCount: '{{integer(0, 50)}}',
+    retweetCount: '{{integer(0, 100)}}',
+    likeCount: '{{integer(0, 250)}}',
+    userName: '{{firstName()}} {{surname()}}',
+    createdAt: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss Z")}}',
+    updatedAt: '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss Z")}}',
+    deletedAt: '{{random(date(new Date(2015, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss Z"), null)}}'
+
+  }
+]

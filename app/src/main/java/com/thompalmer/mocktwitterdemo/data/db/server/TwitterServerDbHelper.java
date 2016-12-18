@@ -3,20 +3,26 @@ package com.thompalmer.mocktwitterdemo.data.db.server;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.thompalmer.mocktwitterdemo.data.api.model.entity.Account;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
 import com.thompalmer.mocktwitterdemo.data.db.common.SqlTweet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TwitterServerDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "TwitterServer.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "TwitterServer.db";
     private final Context context;
 
     public TwitterServerDbHelper(Context context) {
@@ -26,9 +32,18 @@ public class TwitterServerDbHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SqlTweet.CREATE_TABLE);
-        Log.d("Database", "Creating database");
+        db.execSQL(SqlAccount.CREATE_TABLE);
+        db.execSQL(SqlSession.CREATE_TABLE);
+
+        Gson gson = new GsonBuilder().create();
+        seedAccounts(db, gson);
+        seedTweets(db, gson);
+
+    }
+
+    private void seedTweets(SQLiteDatabase db, Gson gson) {
         ListTweetsResponse listTweetsResponse =
-                new GsonBuilder().create().fromJson(loadJSONFromAsset("tweets.json"), ListTweetsResponse.class);
+               gson.fromJson(loadJSONFromAsset("tweets.json"), ListTweetsResponse.class);
         try {
             db.beginTransaction();
             for(Tweet tweet : listTweetsResponse.tweets) {
@@ -38,8 +53,22 @@ public class TwitterServerDbHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-        db.execSQL(SqlAccount.CREATE_TABLE);
-        db.execSQL(SqlSession.CREATE_TABLE);
+    }
+
+    @NonNull
+    private Gson seedAccounts(SQLiteDatabase db, Gson gson) {
+        Type type = new TypeToken<ArrayList<Account>>() {}.getType();
+        List<Account> accounts = gson.fromJson(loadJSONFromAsset("accounts.json"), type);
+        try {
+            db.beginTransaction();
+            for(Account account : accounts) {
+                db.insert(SqlAccount.TABLE, null, SqlAccount.build(account));
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return gson;
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -50,7 +79,7 @@ public class TwitterServerDbHelper extends SQLiteOpenHelper {
     }
 
     public String loadJSONFromAsset(String assetName) {
-        String json = null;
+        String json;
         try {
             InputStream is = context.getAssets().open(assetName);
             int size = is.available();

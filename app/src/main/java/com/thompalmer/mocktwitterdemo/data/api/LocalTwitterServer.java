@@ -1,17 +1,21 @@
 package com.thompalmer.mocktwitterdemo.data.api;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.request.LoginRequest;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.LoginResponse;
 import com.thompalmer.mocktwitterdemo.data.db.common.SqlTweet;
+import com.thompalmer.mocktwitterdemo.data.db.server.SqlAccount;
+import com.thompalmer.mocktwitterdemo.data.db.server.SqlSession;
 import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import io.reactivex.Observable;
@@ -20,24 +24,15 @@ import retrofit2.http.Path;
 import retrofit2.mock.BehaviorDelegate;
 
 public final class LocalTwitterServer implements TwitterService {
-    public static final int ERROR_UNAUTHORIZED = 401;
-    public static final String MESSAGE_INVALID_PASSWORD = "Invalid username/password";
-    public static final String MESSAGE_USER_DOES_NOT_EXIST = "Username does not exist";
+    private static final int ERROR_UNAUTHORIZED = 401;
+    private static final String MESSAGE_INVALID_PASSWORD = "Invalid username/password";
+    private static final String MESSAGE_USER_DOES_NOT_EXIST = "Username does not exist";
     private final BehaviorDelegate<TwitterService> delegate;
-    private final Map<String, String> userAccounts;
-    private UserSession userSession;
     private final TwitterServerDatabase db;
 
     public LocalTwitterServer(BehaviorDelegate<TwitterService> delegate, TwitterServerDatabase db) {
         this.delegate = delegate;
         this.db = db;
-        userAccounts = new HashMap<>();
-
-        addUserAccount("thomapalmer@gmail.com", "password1");
-    }
-
-    void addUserAccount(String email, String password) {
-        userAccounts.put(email, password);
     }
 
     @Override
@@ -46,14 +41,35 @@ public final class LocalTwitterServer implements TwitterService {
         String password = loginRequest.getPassword();
         LoginResponse response;
 
-        if (userAccounts.containsKey(email) && userAccounts.get(email).equals(password)) {
-            this.userSession = new UserSession(email, new Random().nextLong());
-            response = LoginResponse.success(userSession.email, userSession.authToken);
-        } else {
-            response = LoginResponse.failure(ERROR_UNAUTHORIZED,
-                    userAccounts.containsKey(email) ? MESSAGE_INVALID_PASSWORD : MESSAGE_USER_DOES_NOT_EXIST);
+        Cursor cursor = db.get().query(SqlAccount.QUERY, loginRequest.getEmail());
+        try {
+            if(cursor.moveToFirst()) {
+                String userPassword = cursor.getString(cursor.getColumnIndex(SqlAccount.PASSWORD));
+                if(userPassword.equals(password)) {
+                    Long authToken = storeSessionInfo(email);
+                    response = LoginResponse.success(email, authToken);
+                } else {
+                    response = LoginResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_INVALID_PASSWORD);
+                }
+            } else {
+                response = LoginResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_USER_DOES_NOT_EXIST);
+            }
+        } finally {
+            if(cursor != null) {
+                cursor.close();
+            }
         }
+
         return delegate.returningResponse(response).login(loginRequest);
+    }
+
+    @NonNull
+    private Long storeSessionInfo(String email) {
+        Long authToken = new Random().nextLong();
+        String now = DateTime.now().toString();
+        ContentValues values = SqlSession.build(email, authToken, now, now, null);
+        db.get().insert(SqlSession.TABLE, values);
+        return authToken;
     }
 
     @Override
