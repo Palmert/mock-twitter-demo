@@ -1,13 +1,8 @@
 package com.thompalmer.mocktwitterdemo.presentation.tweet;
 
 import com.thompalmer.mocktwitterdemo.domain.CreateTweet;
-import com.thompalmer.mocktwitterdemo.domain.ListTweets;
-import com.thompalmer.mocktwitterdemo.domain.PerformLogout;
 
 import javax.inject.Inject;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class CreateTweetPresenter {
     private final CreateTweet createTweet;
@@ -18,7 +13,7 @@ public class CreateTweetPresenter {
     }
 
 
-    public void onTweetClicked(String tweetContent) {
+    public void onPostTweetClicked(String tweetContent) {
         createTweet.execute(tweetContent);
     }
 }

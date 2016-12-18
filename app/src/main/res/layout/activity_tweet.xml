@@ -60,7 +60,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/edit_text_tweet"
-                    android:onClick="@{viewModel::onTweetClicked}"
+                    android:onClick="@{viewModel::onPostTweetClicked}"
                     android:text="@string/tweet"/>
 
                 <TextView

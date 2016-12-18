@@ -1,21 +1,13 @@
 package com.thompalmer.mocktwitterdemo.presentation.tweet;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.base.BaseViewModel;
-import com.thompalmer.mocktwitterdemo.presentation.feed.DaggerFeedComponent;
-import com.thompalmer.mocktwitterdemo.presentation.feed.FeedViewBinding;
 
 import javax.inject.Inject;
-
-import rx.Observable;
 
 @CreateTweetScope
 public class CreateTweetViewModel extends BaseViewModel {
@@ -46,8 +38,9 @@ public class CreateTweetViewModel extends BaseViewModel {
         characterCount.set(s.length());
     }
 
-    public void onTweetClicked(View view) {
-        presenter.onTweetClicked(tweetContent);
+    @SuppressWarnings("unused")
+    public void onPostTweetClicked(View view) {
+        presenter.onPostTweetClicked(tweetContent);
     }
 
     public ObservableInt getCharacterCount() {
