@@ -21,7 +21,7 @@ public class FeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildComponentAndInject();
-        FeedViewBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_tweet);
+        FeedViewBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_feed);
         binding.setViewModel(new FeedViewModel(this, binding));
         setSupportActionBar(binding.toolbar);
     }

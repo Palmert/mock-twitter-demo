@@ -1,17 +1,15 @@
 package com.thompalmer.mocktwitterdemo.presentation.feed;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.base.BaseViewModel;
+import com.thompalmer.mocktwitterdemo.presentation.tweet.CreateTweetActivity;
 
 import javax.inject.Inject;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 @FeedScope
 public class FeedViewModel extends BaseViewModel {
@@ -33,7 +31,7 @@ public class FeedViewModel extends BaseViewModel {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(linearLayoutManager.findLastCompletelyVisibleItemPosition() - adapter.getItemCount() < 15) {
+                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() - adapter.getItemCount() < 15) {
                     presenter.listTweets(adapter);
                 }
             }
@@ -42,8 +40,8 @@ public class FeedViewModel extends BaseViewModel {
     }
 
     public void onAddTweetClicked(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        Intent intent = new Intent(context, CreateTweetActivity.class);
+        context.startActivity(intent);
     }
 
     @Override

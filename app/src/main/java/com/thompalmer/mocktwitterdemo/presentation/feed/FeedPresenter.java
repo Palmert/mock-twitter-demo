@@ -6,7 +6,6 @@ import com.thompalmer.mocktwitterdemo.domain.PerformLogout;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class FeedPresenter {
@@ -32,7 +31,7 @@ public class FeedPresenter {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(listTweetsResponse -> {
-                        adapter.setFeedItems(listTweetsResponse.tweets);
+                        adapter.setFeedItems(listTweetsResponse.success.tweets);
                         requestingTweets = false;
                     }, throwable -> requestingTweets = false);
         }
