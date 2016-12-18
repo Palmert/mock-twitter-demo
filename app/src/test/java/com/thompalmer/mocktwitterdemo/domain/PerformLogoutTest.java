@@ -1,39 +1,34 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
-import com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase;
-import com.thompalmer.mocktwitterdemo.data.db.common.SqlTweet;
-import com.thompalmer.mocktwitterdemo.data.db.server.SqlSession;
-import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
+import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
+import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
-import javax.inject.Inject;
+import org.junit.Rule;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+
+import static org.mockito.Mockito.*;
 
 public class PerformLogoutTest {
-    private final StringPreference userEmailPref;
-    private final LongPreference authTokenPref;
-    private final TwitterServerDatabase serverDb;
-    private final TwitterDatabase db;
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Inject
-    public PerformLogoutTest(@UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref,
-                             TwitterServerDatabase serverDb, TwitterDatabase db) {
-        this.userEmailPref = userEmailPref;
-        this.authTokenPref = authTokenPref;
-        this.serverDb = serverDb;
-        this.db = db;
-    }
+    @Mock
+    UserSessionInteractor mockSessionPersister;
 
-    public void execute() {
-        clearSessionInfo();
-        db.delete(SqlTweet.TABLE, null);
-        serverDb.delete(SqlSession.TABLE, null);
-    }
+    @Mock
+    RepositoryInteractor<Tweet> mockTweetRepository;
 
-    private void clearSessionInfo() {
-        userEmailPref.remove();
-        authTokenPref.remove();
+    @InjectMocks PerformLogout performLogout;
+
+    @Test
+    public void shouldClearSessionAndLocalTweetsOnLogout() {
+        performLogout.execute();
+        verify(mockSessionPersister).clear();
+        verify(mockTweetRepository).clear();
     }
 }

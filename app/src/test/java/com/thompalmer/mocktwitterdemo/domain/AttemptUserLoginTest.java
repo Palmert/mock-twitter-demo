@@ -29,11 +29,11 @@ public class AttemptUserLoginTest {
 
     @Mock
     TwitterService twitterService;
+
     @Mock
     UserSessionInteractor userSessionInteractor;
 
     @InjectMocks AttemptUserLogin attemptUserLogin;
-
 
     @Test
     public void shouldSaveCredentialsOnSuccessfulLogin() {
