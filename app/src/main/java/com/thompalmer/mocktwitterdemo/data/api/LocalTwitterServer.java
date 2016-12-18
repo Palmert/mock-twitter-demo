@@ -79,12 +79,12 @@ public final class LocalTwitterServer implements TwitterService {
     }
 
     @Override
-    public Observable<TweetResponse> postTweet(@Header("user_name") String userName, @Header("auth_token") Long authToken,
+    public Observable<TweetResponse> postTweet(@Header("user_name") String email, @Header("auth_token") Long authToken,
                                                @Body PostTweetRequest postTweetRequest) {
         TweetResponse response;
-        if (isAuthenticated(userName, authToken)) {
+        if (isAuthenticated(email, authToken)) {
             Tweet tweet = new Tweet();
-            tweet.userName = userName;
+            tweet.userName = getUserName(email);
             tweet.text = postTweetRequest.getText();
             String now = DateTime.now(DateTimeZone.UTC).toString();
             tweet.createdAt = now;
@@ -95,7 +95,7 @@ public final class LocalTwitterServer implements TwitterService {
             response = TweetResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_FAILED_AUTHENTICATION);
         }
 
-        return delegate.returningResponse(response).postTweet(userName, authToken, postTweetRequest);
+        return delegate.returningResponse(response).postTweet(email, authToken, postTweetRequest);
     }
 
     private boolean isAuthenticated(    String userName, long authToken) {
@@ -103,6 +103,16 @@ public final class LocalTwitterServer implements TwitterService {
         return cursor.getCount() == 1;
     }
 
+    private String getUserName( String email) {
+        String fullName = email;
+        Cursor cursor = db.get().query(SqlAccount.QUERY, email);
+        if(cursor.moveToFirst()) {
+            String firstName = cursor.getString(cursor.getColumnIndex(SqlAccount.FIRST_NAME));
+            String lastName = cursor.getString(cursor.getColumnIndex(SqlAccount.LAST_NAME));
+            fullName =  firstName + " " + lastName;
+        }
+        return fullName;
+    }
 
     @Override
     public Observable<ListTweetsResponse> listTweets(@Header("user_name") String userName, @Header("auth_token") Long authToken,

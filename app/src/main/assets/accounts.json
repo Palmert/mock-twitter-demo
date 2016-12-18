@@ -1,5 +1,7 @@
 [
   {
+    "firstName": "Bishop",
+    "lastName": "Lott",
     "email": "thomapalmer@gmail.com",
     "password": "password1",
     "createdAt": "2016-08-01T10:39:07 +04:00",
@@ -7,6 +9,8 @@
     "deletedAt": null
   },
   {
+    "firstName": "Chavez",
+    "lastName": "Tyson",
     "email": "trov500@trov.com",
     "password": "password2",
     "createdAt": "2016-11-10T08:15:09 +05:00",
@@ -14,6 +18,8 @@
     "deletedAt": null
   },
   {
+    "firstName": "Katie",
+    "lastName": "Vang",
     "email": "androiddev@devshop.com",
     "password": "password3",
     "createdAt": "2016-11-27T03:49:41 +05:00",
@@ -21,6 +27,8 @@
     "deletedAt": "2015-04-11T06:04:20 +04:00"
   },
   {
+    "firstName": "Ada",
+    "lastName": "Benson",
     "email": "stansfield.ben@sleep.tech",
     "password": "password4",
     "createdAt": "2016-03-03T03:08:00 +05:00",
@@ -28,6 +36,8 @@
     "deletedAt": null
   },
   {
+    "firstName": "Blevins",
+    "lastName": "Morin",
     "email": "pennypacheco@entroflex.com",
     "password": "password5",
     "createdAt": "2014-04-13T08:22:10 +04:00",
