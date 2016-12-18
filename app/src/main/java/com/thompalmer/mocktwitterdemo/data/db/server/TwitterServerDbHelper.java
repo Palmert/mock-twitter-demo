@@ -3,7 +3,6 @@ package com.thompalmer.mocktwitterdemo.data.db.server;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -55,8 +54,7 @@ public class TwitterServerDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    @NonNull
-    private Gson seedAccounts(SQLiteDatabase db, Gson gson) {
+    private void seedAccounts(SQLiteDatabase db, Gson gson) {
         Type type = new TypeToken<ArrayList<Account>>() {}.getType();
         List<Account> accounts = gson.fromJson(loadJSONFromAsset("accounts.json"), type);
         try {
@@ -68,17 +66,17 @@ public class TwitterServerDbHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
-        return gson;
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Handle upgrades
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public String loadJSONFromAsset(String assetName) {
+    private String loadJSONFromAsset(String assetName) {
         String json;
         try {
             InputStream is = context.getAssets().open(assetName);
