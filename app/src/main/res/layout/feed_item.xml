@@ -47,21 +47,27 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@{String.valueOf(tweet.replyCount)}"/>
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    android:text='@{String.valueOf(tweet.replyCount) + " Replies"}'/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@{String.valueOf(tweet.retweetCount)}"/>
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    android:text='@{String.valueOf(tweet.retweetCount) + " Retweets"}'/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@{String.valueOf(tweet.likeCount)}"/>
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    android:text='@{String.valueOf(tweet.likeCount) + " Likes"}'/>
             </LinearLayout>
 
         </RelativeLayout>
