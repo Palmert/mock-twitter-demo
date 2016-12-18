@@ -3,6 +3,7 @@ package com.thompalmer.mocktwitterdemo.presentation.login;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.ObservableBoolean;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.base.BaseViewModel;
@@ -63,16 +64,24 @@ public class LoginViewModel extends BaseViewModel {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(loginResponse -> {
-                        loggingIn.set(false);
-                        if (loginResponse.error != null) {
-                            viewBinding.textInputLayoutPassword.setError(loginResponse.error.message);
-                        } else {
-                            Intent intent = new Intent(context, FeedActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
-                        }
-                    });
+                                loggingIn.set(false);
+                                if (loginResponse.error != null) {
+                                    viewBinding.textInputLayoutPassword.setError(loginResponse.error.message);
+                                    displayRetry();
+                                } else {
+                                    Intent intent = new Intent(context, FeedActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    context.startActivity(intent);
+                                }
+                            }, throwable -> displayRetry()
+                    );
         }
+    }
+
+    private void displayRetry() {
+        Snackbar.make(viewBinding.getRoot(), "Unable to login", Snackbar.LENGTH_LONG)
+                .setAction("Retry", this::onLoginClicked)
+                .show();
     }
 
     public ObservableBoolean isLoggingIn() {
