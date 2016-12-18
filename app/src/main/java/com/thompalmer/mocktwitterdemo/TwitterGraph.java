@@ -8,7 +8,7 @@ import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
 import com.thompalmer.mocktwitterdemo.domain.CreateTweet;
 import com.thompalmer.mocktwitterdemo.domain.ListTweets;
 import com.thompalmer.mocktwitterdemo.domain.PerformLogout;
-import com.thompalmer.mocktwitterdemo.domain.UserSessionPersister;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
 public interface TwitterGraph {
     void inject(TwitterApplication app);
@@ -18,7 +18,7 @@ public interface TwitterGraph {
     ListTweets listTweets();
     CreateTweet createTweet();
 
-    UserSessionPersister userSessionPersister();
+    UserSessionInteractor userSessionPersister();
 
     @UserEmailPref
     StringPreference userEmailPref();

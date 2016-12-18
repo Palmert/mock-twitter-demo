@@ -1,9 +1,9 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
-import com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer;
 import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
 import com.thompalmer.mocktwitterdemo.data.api.model.request.LoginRequest;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.LoginResponse;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class AttemptUserLoginTest {
     @Mock
     TwitterService twitterService;
     @Mock
-    UserSessionPersister userSessionPersister;
+    UserSessionInteractor userSessionInteractor;
 
     @InjectMocks AttemptUserLogin attemptUserLogin;
 
@@ -41,7 +41,7 @@ public class AttemptUserLoginTest {
 
         attemptUserLogin.execute(EMAIL, PASSWORD).subscribe();
 
-        verify(userSessionPersister).save(EMAIL, AUTH_TOKEN);
+        verify(userSessionInteractor).save(EMAIL, AUTH_TOKEN);
     }
 
     @Test
@@ -54,6 +54,6 @@ public class AttemptUserLoginTest {
 
         attemptUserLogin.execute(EMAIL, PASSWORD).subscribe();
 
-        verify(userSessionPersister, never()).save(EMAIL, AUTH_TOKEN);
+        verify(userSessionInteractor, never()).save(EMAIL, AUTH_TOKEN);
     }
 }

@@ -2,7 +2,7 @@ package com.thompalmer.mocktwitterdemo.data.db.server;
 
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
-import com.thompalmer.mocktwitterdemo.domain.DatabaseInteractor;
+import com.thompalmer.mocktwitterdemo.domain.interactor.DatabaseInteractor;
 
 import javax.inject.Inject;
 

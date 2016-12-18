@@ -5,6 +5,7 @@ import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
 import com.thompalmer.mocktwitterdemo.data.db.common.SqlTweet;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,10 +17,10 @@ import static com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase.*;
 public class ListTweets {
     private final TwitterService twitterService;
     private final @Named(TWITTER_DB) BriteDatabase db;
-    private final UserSessionPersister sessionPersister;
+    private final UserSessionInteractor sessionPersister;
 
     @Inject
-    public ListTweets(TwitterService twitterService, BriteDatabase db, UserSessionPersister sessionPersister) {
+    public ListTweets(TwitterService twitterService, BriteDatabase db, UserSessionInteractor sessionPersister) {
         this.twitterService = twitterService;
         this.db = db;
         this.sessionPersister = sessionPersister;

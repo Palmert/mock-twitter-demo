@@ -3,7 +3,7 @@ package com.thompalmer.mocktwitterdemo.presentation.login;
 import com.thompalmer.mocktwitterdemo.R;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.LoginResponse;
 import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
-import com.thompalmer.mocktwitterdemo.domain.UserSessionPersister;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
 import javax.inject.Inject;
 
@@ -11,10 +11,10 @@ import io.reactivex.Observable;
 
 public class LoginPresenter {
     private final AttemptUserLogin attemptUserLogin;
-    private final UserSessionPersister sessionPersister;
+    private final UserSessionInteractor sessionPersister;
 
     @Inject
-    public LoginPresenter(AttemptUserLogin attemptUserLogin, UserSessionPersister sessionPersister) {
+    public LoginPresenter(AttemptUserLogin attemptUserLogin, UserSessionInteractor sessionPersister) {
         this.attemptUserLogin = attemptUserLogin;
         this.sessionPersister = sessionPersister;
     }

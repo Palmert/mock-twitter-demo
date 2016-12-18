@@ -1,10 +1,8 @@
 package com.thompalmer.mocktwitterdemo.ui;
 
 import com.thompalmer.mocktwitterdemo.R;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
 import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
-import com.thompalmer.mocktwitterdemo.domain.UserSessionPersister;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 import com.thompalmer.mocktwitterdemo.presentation.login.LoginPresenter;
 
 import junit.framework.Assert;
@@ -31,13 +29,13 @@ public class LoginPresenterTest {
     AttemptUserLogin attemptUserLogin;
 
     @Mock
-    UserSessionPersister userSessionPersister;
+    UserSessionInteractor userSessionInteractor;
 
     private LoginPresenter presenter;
 
     @Before
     public void setup() {
-        presenter = new LoginPresenter(attemptUserLogin, userSessionPersister);
+        presenter = new LoginPresenter(attemptUserLogin, userSessionInteractor);
     }
 
     @Test

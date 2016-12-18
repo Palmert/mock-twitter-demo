@@ -4,6 +4,7 @@ import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.request.PostTweetRequest;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.TweetResponse;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class CreateTweetTest {
     TwitterService mockTwitterService;
 
     @Mock
-    UserSessionPersister mockSessionPersister;
+    UserSessionInteractor mockSessionPersister;
 
     @InjectMocks CreateTweet createTweet;
 

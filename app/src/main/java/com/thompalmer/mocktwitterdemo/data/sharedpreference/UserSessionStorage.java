@@ -1,12 +1,12 @@
 package com.thompalmer.mocktwitterdemo.data.sharedpreference;
 
-import com.thompalmer.mocktwitterdemo.domain.UserSessionPersister;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
 /**
  * Created by thompalmer on 2016-12-18.
  */
 
-public class UserSessionStorage implements UserSessionPersister {
+public class UserSessionStorage implements UserSessionInteractor {
     private final StringPreference userEmailPref;
     private final LongPreference authTokenPref;
 

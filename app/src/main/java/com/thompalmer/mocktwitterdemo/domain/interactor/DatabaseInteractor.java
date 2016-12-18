@@ -1,4 +1,4 @@
-package com.thompalmer.mocktwitterdemo.domain;
+package com.thompalmer.mocktwitterdemo.domain.interactor;
 
 
 import com.squareup.sqlbrite.BriteDatabase;
