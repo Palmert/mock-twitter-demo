@@ -20,7 +20,9 @@ public class SqlSession {
                     DELETED_AT + " TEXT DEFAULT NULL)";
 
     public static final String QUERY = "SELECT * FROM " + TABLE +
-            " WHERE " + EMAIL + " = ? AND " + DELETED_AT + " IS NULL";
+            " WHERE " + EMAIL + " = ? AND "
+            + AUTH_TOKEN + " = ? AND "
+            + DELETED_AT + " IS NULL";
 
 
     public static ContentValues build(String email, Long authToken, String createdAt, String updatedAt, String deletedAt) {
