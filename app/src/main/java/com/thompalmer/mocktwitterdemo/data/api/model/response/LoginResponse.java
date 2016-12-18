@@ -1,5 +1,8 @@
 package com.thompalmer.mocktwitterdemo.data.api.model.response;
 
+import com.thompalmer.mocktwitterdemo.data.api.model.entity.Error;
+import com.thompalmer.mocktwitterdemo.data.api.model.entity.Success;
+
 public class LoginResponse {
     public Success success;
     public Error error;

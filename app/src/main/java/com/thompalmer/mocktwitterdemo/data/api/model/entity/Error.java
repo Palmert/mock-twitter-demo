@@ -1,4 +1,4 @@
-package com.thompalmer.mocktwitterdemo.data.api.model.response;
+package com.thompalmer.mocktwitterdemo.data.api.model.entity;
 
 public class Error {
     public int code;

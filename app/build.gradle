@@ -56,4 +56,6 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
 
     compile 'net.danlew:android.joda:2.9.5.1'
+
+    compile 'com.facebook.stetho:stetho:1.4.2'
 }
