@@ -34,6 +34,7 @@ public class AttemptUserLoginTest {
 
     @InjectMocks AttemptUserLogin attemptUserLogin;
 
+
     @Test
     public void shouldSaveCredentialsOnSuccessfulLogin() {
         when(twitterService.login(any(LoginRequest.class)))

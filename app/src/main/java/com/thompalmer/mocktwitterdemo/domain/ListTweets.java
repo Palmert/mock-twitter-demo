@@ -27,6 +27,8 @@ public class ListTweets {
     }
 
     private void persistTweetsResponse(ListTweetsResponse listTweetsResponse) {
-       tweetRepository.saveAll(listTweetsResponse.success.tweets);
+        if(listTweetsResponse.success != null) {
+            tweetRepository.saveAll(listTweetsResponse.success.tweets);
+        }
     }
 }

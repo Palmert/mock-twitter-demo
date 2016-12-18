@@ -1,39 +1,63 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
-import com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer;
+import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
 import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
+import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
-import javax.inject.Inject;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 
+import static com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer.*;
+import static org.mockito.Mockito.*;
+
 public class ListTweetTest {
-    private final LocalTwitterServer twitterService;
-    private final RepositoryInteractor<Tweet> tweetRepository;
-    private final StringPreference userEmailPref;
-    private final LongPreference authTokenPref;
-//    private final StringPreference lastCreatedAt;
+    private static final String LIMIT = "50";
+    private static final String LAST_CREATED_AT = "";
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Inject
-    public ListTweetTest(LocalTwitterServer twitterService, RepositoryInteractor<Tweet> tweetRepository,
-                         @UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref) {
-        this.twitterService = twitterService;
-        this.tweetRepository = tweetRepository;
-        this.userEmailPref = userEmailPref;
-        this.authTokenPref = authTokenPref;
+    @Mock
+    TwitterService mockTwitterService;
+
+    @Mock
+    UserSessionInteractor mockSessionPersister;
+
+    @Mock
+    RepositoryInteractor<Tweet> mockTweetRepository;
+
+    @InjectMocks ListTweets listTweets;
+
+    @Before
+    public void setup() {
+        when(mockSessionPersister.getEmail()).thenReturn("email");
+        when(mockSessionPersister.getAuthToken()).thenReturn(1L);
     }
 
-    public Observable<ListTweetsResponse> execute(String count, String lastCreatedAt) {
-        return twitterService.listTweets(userEmailPref.get(), authTokenPref.get(), count, lastCreatedAt).doOnNext(this::persistTweetsResponse);
+    @Test
+    public void shouldStoreFetchedTweetsOnSuccess() {
+        when(mockTwitterService.listTweets(anyString(), anyLong(), anyString(), anyString()))
+                .thenReturn(Observable.just(ListTweetsResponse.success(new ArrayList<>(), LAST_CREATED_AT)));
+        listTweets.execute(LIMIT, LAST_CREATED_AT).subscribe();
+        verify(mockTweetRepository).saveAll(anyList());
     }
 
-    private void persistTweetsResponse(ListTweetsResponse listTweetsResponse) {
-//        twee
+    @Test
+    public void shouldNotAttemptToStoreOnFailure() {
+        when(mockTwitterService.listTweets(anyString(), anyLong(), anyString(), anyString()))
+                .thenReturn(Observable.just(ListTweetsResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_FAILED_AUTHENTICATION)));
+        listTweets.execute(LIMIT, LAST_CREATED_AT).subscribe();
+
+        verify(mockTweetRepository, never()).saveAll(anyList());
     }
 }
