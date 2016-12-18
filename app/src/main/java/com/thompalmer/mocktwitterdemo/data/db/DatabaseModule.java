@@ -17,19 +17,14 @@ public class DatabaseModule {
 
     @Provides
     @ApplicationScope
-    SqlBrite provideSqlBrite() {
-        return new SqlBrite.Builder().build();
-    }
-
-    @Provides
-    @ApplicationScope
     TwitterServerDbHelper provideTwitterServerDbHelper(Application application) {
         return new TwitterServerDbHelper(application.getApplicationContext());
     }
 
     @Provides
     @ApplicationScope
-    TwitterServerDatabase provideTwitterServerDatabase(TwitterServerDbHelper dbHelper, SqlBrite sqlBrite) {
+    TwitterServerDatabase provideTwitterServerDatabase(TwitterServerDbHelper dbHelper) {
+        SqlBrite sqlBrite = new SqlBrite.Builder().build();
         return new TwitterServerDatabase(dbHelper, sqlBrite);
     }
 
@@ -41,7 +36,8 @@ public class DatabaseModule {
 
     @Provides
     @ApplicationScope
-    TwitterDatabase provideTwitterDatabase(TwitterDbHelper dbHelper, SqlBrite sqlBrite) {
+    TwitterDatabase provideTwitterDatabase(TwitterDbHelper dbHelper) {
+        SqlBrite sqlBrite = new SqlBrite.Builder().build();
         return new TwitterDatabase(dbHelper, sqlBrite);
     }
 }
