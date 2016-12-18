@@ -1,6 +1,7 @@
 package com.thompalmer.mocktwitterdemo.data.db.server;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Account;
 
@@ -47,5 +48,16 @@ public class SqlAccount {
 
     public static ContentValues build(Account account) {
         return build(account.email, account.firstName, account.lastName, account.password, account.createdAt, account.updatedAt, account.deletedAt);
+    }
+
+    public static Account map(Cursor cursor) {
+        Account account = new Account();
+        account.firstName = cursor.getString(cursor.getColumnIndex(SqlAccount.FIRST_NAME));
+        account.lastName  = cursor.getString(cursor.getColumnIndex(SqlAccount.LAST_NAME));
+        account.email     = cursor.getString(cursor.getColumnIndex(SqlAccount.EMAIL));
+        account.createdAt = cursor.getString(cursor.getColumnIndex(SqlAccount.CREATED_AT));
+        account.updatedAt = cursor.getString(cursor.getColumnIndex(SqlAccount.UPDATED_AT));
+        account.deletedAt = cursor.getString(cursor.getColumnIndex(SqlAccount.DELETED_AT));
+        return account;
     }
 }

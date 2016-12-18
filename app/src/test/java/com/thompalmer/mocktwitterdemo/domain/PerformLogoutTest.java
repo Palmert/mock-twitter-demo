@@ -28,8 +28,8 @@ public class PerformLogoutTest {
 
     public void execute() {
         clearSessionInfo();
-        db.get().delete(SqlTweet.TABLE, null);
-        serverDb.get().delete(SqlSession.TABLE, null);
+        db.delete(SqlTweet.TABLE, null);
+        serverDb.delete(SqlSession.TABLE, null);
     }
 
     private void clearSessionInfo() {

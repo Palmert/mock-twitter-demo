@@ -1,15 +1,13 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
-import com.squareup.sqlbrite.BriteDatabase;
 import com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
-import com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase;
-import com.thompalmer.mocktwitterdemo.data.db.common.SqlTweet;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
+import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
 
 import javax.inject.Inject;
 
@@ -17,16 +15,16 @@ import io.reactivex.Observable;
 
 public class ListTweetTest {
     private final LocalTwitterServer twitterService;
-    private final TwitterDatabase db;
+    private final RepositoryInteractor<Tweet> tweetRepository;
     private final StringPreference userEmailPref;
     private final LongPreference authTokenPref;
 //    private final StringPreference lastCreatedAt;
 
     @Inject
-    public ListTweetTest(LocalTwitterServer twitterService, TwitterDatabase db,
+    public ListTweetTest(LocalTwitterServer twitterService, RepositoryInteractor<Tweet> tweetRepository,
                          @UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref) {
         this.twitterService = twitterService;
-        this.db = db;
+        this.tweetRepository = tweetRepository;
         this.userEmailPref = userEmailPref;
         this.authTokenPref = authTokenPref;
     }
@@ -36,11 +34,6 @@ public class ListTweetTest {
     }
 
     private void persistTweetsResponse(ListTweetsResponse listTweetsResponse) {
-        BriteDatabase.Transaction transaction = db.get().newTransaction();
-        for(Tweet tweet : listTweetsResponse.success.tweets) {
-            db.get().insert(SqlTweet.TABLE, SqlTweet.build(tweet));
-        }
-        transaction.markSuccessful();
-        transaction.end();
+//        twee
     }
 }

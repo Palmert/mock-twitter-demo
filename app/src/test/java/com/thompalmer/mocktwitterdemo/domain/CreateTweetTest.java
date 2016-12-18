@@ -4,8 +4,10 @@ import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.request.PostTweetRequest;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.TweetResponse;
+import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
 import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -28,14 +30,23 @@ public class CreateTweetTest {
     @Mock
     UserSessionInteractor mockSessionPersister;
 
+    @Mock
+    RepositoryInteractor<Tweet> mockDb;
+
     @InjectMocks CreateTweet createTweet;
+
+    @Before
+    public void setup() {
+        when(mockSessionPersister.getEmail()).thenReturn("email");
+        when(mockSessionPersister.getAuthToken()).thenReturn(1L);
+    }
 
     @Test
     public void shouldSaveTweetLocallyAfterSuccessfulPost() {
         when(mockTwitterService.postTweet(anyString(), anyLong(), any(PostTweetRequest.class)))
-                .thenReturn(Observable.just(TweetResponse.success(any(Tweet.class))));
-        createTweet.execute("Test tweet text").subscribe();
-        //TODO verify tweet was saved locally
+                .thenReturn(Observable.just(TweetResponse.success(new Tweet())));
+        createTweet.execute("Test").subscribe();
+        verify(mockDb).save(any(Tweet.class));
     }
 
 
@@ -44,6 +55,6 @@ public class CreateTweetTest {
         when(mockTwitterService.postTweet(anyString(), anyLong(), any(PostTweetRequest.class)))
                 .thenReturn(Observable.just(TweetResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_FAILED_AUTHENTICATION)));
         createTweet.execute("Test tweet text").subscribe();
-        //TODO verify tweet was saved locally
+        verify(mockDb, never()).save(any(Tweet.class));
     }
 }

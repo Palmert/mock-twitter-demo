@@ -1,8 +1,11 @@
 package com.thompalmer.mocktwitterdemo.data.db.common;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
+
+import rx.functions.Func1;
 
 /*{
     "text": "Ipsum aliquip adipisicing velit consequat qui velit dolor laborum deserunt anim ea. Duis duis ipsum ut magna Lorem non aliquip aute nulla laborum voluptate sunt proident nisi.",
@@ -44,7 +47,7 @@ public class SqlTweet {
 
     public static final String LIST_WITH_CREATED_AT = "SELECT * FROM " + TABLE +
             " WHERE " + CREATED_AT +  " < ? AND " + DELETED_AT + " IS NULL" +
-            " ORDER BY " + CREATED_AT + " LIMIT ? ";
+            " ORDER BY " + CREATED_AT + " DESC LIMIT ? ";
 
     public static ContentValues build(String text, int replyCount, int retweetCount, int likeCount,
                                       String userName, String createdAt, String updatedAt, String deletedAt) {
@@ -67,5 +70,20 @@ public class SqlTweet {
     public static ContentValues build(Tweet tweet) {
         return build(tweet.text, tweet.replyCount, tweet.retweetCount, tweet.likeCount,
                         tweet.userName, tweet.createdAt, tweet.updatedAt, tweet.deletedAt);
+    }
+
+    public static final Func1<Cursor, Tweet> MAPPER = SqlTweet::map;
+
+    public static Tweet map(Cursor cursor) {
+        Tweet tweet = new Tweet();
+        tweet.text = cursor.getString(cursor.getColumnIndex(SqlTweet.TEXT));
+        tweet.replyCount = cursor.getInt(cursor.getColumnIndex(SqlTweet.REPLY_COUNT));
+        tweet.retweetCount = cursor.getInt(cursor.getColumnIndex(SqlTweet.RETWEET_COUNT));
+        tweet.likeCount = cursor.getInt(cursor.getColumnIndex(SqlTweet.LIKE_COUNT));
+        tweet.userName = cursor.getString(cursor.getColumnIndex(SqlTweet.USER_NAME));
+        tweet.createdAt = cursor.getString(cursor.getColumnIndex(SqlTweet.CREATED_AT));
+        tweet.updatedAt = cursor.getString(cursor.getColumnIndex(SqlTweet.UPDATED_AT));
+        tweet.deletedAt = cursor.getString(cursor.getColumnIndex(SqlTweet.DELETED_AT));
+        return tweet;
     }
 }
