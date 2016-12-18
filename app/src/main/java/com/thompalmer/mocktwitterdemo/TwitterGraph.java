@@ -5,7 +5,7 @@ import com.thompalmer.mocktwitterdemo.domain.AttemptUserLogin;
 import com.thompalmer.mocktwitterdemo.domain.PerformLogout;
 
 public interface TwitterGraph {
-    void inject(TwitterApp app);
+    void inject(TwitterApplication app);
 
     AttemptUserLogin userLoginAttempt();
     PerformLogout performLogout();

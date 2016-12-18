@@ -3,16 +3,19 @@ package com.thompalmer.mocktwitterdemo;
 import android.app.Application;
 import android.content.Context;
 
-public class TwitterApp extends Application {
+import net.danlew.android.joda.JodaTimeAndroid;
+
+public class TwitterApplication extends Application {
     private TwitterComponent component;
 
-    public static TwitterApp get(Context context) {
-        return (TwitterApp) context.getApplicationContext();
+    public static TwitterApplication get(Context context) {
+        return (TwitterApplication) context.getApplicationContext();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        JodaTimeAndroid.init(this);
         buildComponentAndInject();
     }
 

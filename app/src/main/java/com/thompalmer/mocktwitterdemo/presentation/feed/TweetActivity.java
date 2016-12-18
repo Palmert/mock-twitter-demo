@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.R;
-import com.thompalmer.mocktwitterdemo.TwitterApp;
+import com.thompalmer.mocktwitterdemo.TwitterApplication;
 import com.thompalmer.mocktwitterdemo.presentation.login.LoginActivity;
 
 import javax.inject.Inject;
@@ -57,7 +57,7 @@ public class TweetActivity extends AppCompatActivity {
 
     private void buildComponentAndInject() {
         DaggerTweetComponent.builder()
-                .twitterComponent(TwitterApp.get(this).component())
+                .twitterComponent(TwitterApplication.get(this).component())
                 .build()
                 .inject(this);
     }

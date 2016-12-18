@@ -13,7 +13,7 @@ public interface TwitterComponent extends TwitterGraph {
         private Initializer() {
         }
 
-        static TwitterComponent init(TwitterApp app) {
+        static TwitterComponent init(TwitterApplication app) {
             return DaggerTwitterComponent.builder()
                     .twitterAppModule(new TwitterAppModule(app))
                     .build();

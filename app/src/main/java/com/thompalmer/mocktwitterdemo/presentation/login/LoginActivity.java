@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.thompalmer.mocktwitterdemo.R;
-import com.thompalmer.mocktwitterdemo.TwitterApp;
+import com.thompalmer.mocktwitterdemo.TwitterApplication;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.HasCurrentSession;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
 import com.thompalmer.mocktwitterdemo.presentation.feed.TweetActivity;
 
 import javax.inject.Inject;
@@ -33,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void buildComponentAndInject() {
         DaggerLoginComponent.builder()
-                .twitterComponent(TwitterApp.get(this).component())
+                .twitterComponent(TwitterApplication.get(this).component())
                 .build()
                 .inject(this);
     }
