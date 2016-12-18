@@ -15,4 +15,7 @@
     </string>
     <string name="title_activity_tweet">TweetActivity</string>
     <string name="logout">Logout</string>
+    <string name="new_tweet_hint">What\'s happening?</string>
+    <string name="tweet">Tweet</string>
+    <string name="title_activity_create_tweet">Tweet</string>
 </resources>

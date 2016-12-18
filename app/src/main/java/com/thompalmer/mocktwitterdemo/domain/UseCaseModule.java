@@ -30,7 +30,15 @@ public class UseCaseModule {
 
     @Provides
     @ApplicationScope
-    ListTweets provideListTweets(LocalTwitterServer localTwitterServer, TwitterDatabase twitterDatabase) {
-        return new ListTweets(localTwitterServer, twitterDatabase);
+    ListTweets provideListTweets(LocalTwitterServer localTwitterServer, TwitterDatabase twitterDatabase,
+                                 @UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref) {
+        return new ListTweets(localTwitterServer, twitterDatabase, userEmailPref, authTokenPref);
+    }
+
+    @Provides
+    @ApplicationScope
+    CreateTweet providesCreateTweet(LocalTwitterServer localTwitterServer,
+                                        @UserEmailPref StringPreference userEmailPref, @AuthTokenPref LongPreference authTokenPref) {
+        return new CreateTweet(localTwitterServer, userEmailPref, authTokenPref);
     }
 }
