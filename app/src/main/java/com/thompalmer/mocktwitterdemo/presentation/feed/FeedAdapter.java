@@ -37,8 +37,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     }
 
     public void setFeedItems(List<Tweet> feedItems) {
-        this.feedItems = feedItems;
-        notifyDataSetChanged();
+        if(this.feedItems.isEmpty()) {
+            this.feedItems = feedItems;
+            notifyDataSetChanged();
+        } else {
+            this.feedItems.addAll(feedItems);
+            notifyItemRangeInserted(this.feedItems.size() - feedItems.size(), feedItems.size());
+        }
+    }
+
+    public String getLastCreatedAt() {
+        return feedItems.isEmpty() ? null : feedItems.get(feedItems.size() - 1).createdAt;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

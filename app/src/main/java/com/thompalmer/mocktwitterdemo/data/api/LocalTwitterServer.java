@@ -83,7 +83,7 @@ public final class LocalTwitterServer implements TwitterService {
                 listTweetsResponse.tweets.add(tweet);
             }
         } finally {
-            if(cursor != null) {
+            if (cursor != null) {
                 cursor.close();
             }
         }
