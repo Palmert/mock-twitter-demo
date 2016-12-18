@@ -8,12 +8,12 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 
-public class TweetPresenter {
+public class FeedPresenter {
     private final PerformLogout performLogout;
     private final ListTweets listTweets;
 
     @Inject
-    public TweetPresenter(PerformLogout performLogout, ListTweets listTweets) {
+    public FeedPresenter(PerformLogout performLogout, ListTweets listTweets) {
         this.performLogout = performLogout;
         this.listTweets = listTweets;
     }

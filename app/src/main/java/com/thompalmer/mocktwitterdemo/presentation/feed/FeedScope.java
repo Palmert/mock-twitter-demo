@@ -3,5 +3,5 @@ package com.thompalmer.mocktwitterdemo.presentation.feed;
 import javax.inject.Scope;
 
 @Scope
-public @interface TweetScope {
+public @interface FeedScope {
 }

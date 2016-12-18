@@ -6,7 +6,7 @@ import android.databinding.ObservableBoolean;
 import android.view.View;
 
 import com.thompalmer.mocktwitterdemo.base.BaseViewModel;
-import com.thompalmer.mocktwitterdemo.presentation.feed.TweetActivity;
+import com.thompalmer.mocktwitterdemo.presentation.feed.FeedActivity;
 
 import javax.inject.Inject;
 
@@ -67,7 +67,7 @@ public class LoginViewModel extends BaseViewModel {
                         if (loginResponse.error != null) {
                             viewBinding.textInputLayoutPassword.setError(loginResponse.error.message);
                         } else {
-                            Intent intent = new Intent(context, TweetActivity.class);
+                            Intent intent = new Intent(context, FeedActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         }

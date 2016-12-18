@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.feed.TweetActivity"
+            android:name=".presentation.feed.FeedActivity"
             android:label="@string/title_activity_tweet"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
