@@ -3,9 +3,15 @@ package com.thompalmer.mocktwitterdemo.domain;
 import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.SharePreferenceWrapper;
 import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
 import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,28 +42,32 @@ public class ListTweetTest {
     @Mock
     RepositoryInteractor<Tweet> mockTweetRepository;
 
+    @Mock
+    SharePreferenceWrapper<String> mockLastCreatedAt;
+
     @InjectMocks ListTweets listTweets;
 
     @Before
     public void setup() {
         when(mockSessionPersister.getEmail()).thenReturn("email");
         when(mockSessionPersister.getAuthToken()).thenReturn(1L);
+        when(mockLastCreatedAt.get()).thenReturn("");
     }
 
     @Test
     public void shouldStoreFetchedTweetsOnSuccess() {
         when(mockTwitterService.listTweets(anyString(), anyLong(), anyString(), anyString()))
                 .thenReturn(Observable.just(ListTweetsResponse.success(new ArrayList<>(), LAST_CREATED_AT)));
-        listTweets.execute(LIMIT, LAST_CREATED_AT).subscribe();
-        verify(mockTweetRepository).saveAll(anyList());
+        listTweets.execute(LIMIT).subscribe();
+        verify(mockTweetRepository).saveAll(anyList(), anyString());
     }
 
     @Test
     public void shouldNotAttemptToStoreOnFailure() {
         when(mockTwitterService.listTweets(anyString(), anyLong(), anyString(), anyString()))
                 .thenReturn(Observable.just(ListTweetsResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_FAILED_AUTHENTICATION)));
-        listTweets.execute(LIMIT, LAST_CREATED_AT).subscribe();
+        listTweets.execute(LIMIT).subscribe();
 
-        verify(mockTweetRepository, never()).saveAll(anyList());
+        verify(mockTweetRepository, never()).saveAll(anyList(), anyString());
     }
 }

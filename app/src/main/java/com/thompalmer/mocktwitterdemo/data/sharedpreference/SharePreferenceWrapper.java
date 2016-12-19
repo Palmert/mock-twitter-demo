@@ -7,5 +7,5 @@ package com.thompalmer.mocktwitterdemo.data.sharedpreference;
 public interface SharePreferenceWrapper<T> {
     T get();
     void set(T value);
-    void remove();
+    void clear();
 }

@@ -1,5 +1,6 @@
 package com.thompalmer.mocktwitterdemo.presentation.feed;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,15 +12,19 @@ import com.thompalmer.mocktwitterdemo.presentation.tweet.CreateTweetActivity;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 @FeedScope
 public class FeedViewModel extends BaseViewModel {
+    static final int REQUEST_CODE_TWEET = 100;
     private final Context context;
     private final FeedViewBinding viewBinding;
     private final FeedAdapter adapter;
 
     @Inject FeedPresenter presenter;
 
-    public FeedViewModel(Context context, FeedViewBinding viewBinding) {
+    FeedViewModel(Context context, FeedViewBinding viewBinding) {
         super(context);
         this.context = context;
         this.viewBinding = viewBinding;
@@ -39,9 +44,20 @@ public class FeedViewModel extends BaseViewModel {
         presenter.listTweets(adapter);
     }
 
+    @SuppressWarnings("unused")
     public void onAddTweetClicked(View view) {
         Intent intent = new Intent(context, CreateTweetActivity.class);
-        context.startActivity(intent);
+        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_TWEET);
+    }
+
+    public void displayLatestTweet(String createdAt) {
+        presenter.displayLatestTweet(createdAt)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(tweet -> {
+                    adapter.addTweet(tweet);
+                    viewBinding.recyclerviewTweets.smoothScrollToPosition(0);
+                });
     }
 
     @Override

@@ -33,8 +33,8 @@ public class UserSessionStorage implements UserSessionInteractor {
 
     @Override
     public void clear() {
-        userEmailPref.remove();
-        authTokenPref.remove();
+        userEmailPref.clear();
+        authTokenPref.clear();
     }
 
     @Override

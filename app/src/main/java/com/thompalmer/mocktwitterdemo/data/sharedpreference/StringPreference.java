@@ -27,7 +27,7 @@ public class StringPreference implements SharePreferenceWrapper<String> {
     }
 
     @Override
-    public void remove() {
+    public void clear() {
         preferences.edit().remove(key).apply();
     }
 }

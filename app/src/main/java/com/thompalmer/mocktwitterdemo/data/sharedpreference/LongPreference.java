@@ -27,7 +27,7 @@ public class LongPreference implements SharePreferenceWrapper<Long> {
     }
 
     @Override
-    public void remove() {
+    public void clear() {
         preferences.edit().remove(key).apply();
     }
 }

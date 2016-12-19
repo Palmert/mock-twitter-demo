@@ -12,6 +12,7 @@ import com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase;
 import com.thompalmer.mocktwitterdemo.data.repository.TweetRepository;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.AuthTokenPref;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.LongPreference;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.SharePreferenceWrapper;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.StringPreference;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserEmailPref;
 import com.thompalmer.mocktwitterdemo.data.sharedpreference.UserSessionStorage;
@@ -23,6 +24,7 @@ import dagger.Module;
 import dagger.Provides;
 
 import static com.thompalmer.mocktwitterdemo.data.db.app.TwitterDatabase.*;
+import static com.thompalmer.mocktwitterdemo.data.db.server.TwitterServerDatabase.*;
 
 @Module
 public class DataModule {
@@ -35,7 +37,7 @@ public class DataModule {
 
     @Provides
     @ApplicationScope
-    @Named("TwitterServerDb")
+    @Named(TWITTER_SERVER_DB)
     DatabaseInteractorImpl provideTwitterServerDatabase(Application application, SqlBrite sqlBrite) {
         return new TwitterServerDatabase(application, sqlBrite);
     }
@@ -43,15 +45,16 @@ public class DataModule {
 
     @Provides
     @ApplicationScope
-    @Named("TwitterDb")
+    @Named(TWITTER_DB)
     DatabaseInteractorImpl provideTwitterDatabase(Application application, SqlBrite sqlBrite) {
         return new TwitterDatabase(application, sqlBrite);
     }
 
     @Provides
     @ApplicationScope
-    RepositoryInteractor<Tweet> provideTweetRepository(@Named(TWITTER_DB) DatabaseInteractorImpl twitterDatabase) {
-        return new TweetRepository(twitterDatabase);
+    RepositoryInteractor<Tweet> provideTweetRepository(@Named(TWITTER_DB) DatabaseInteractorImpl twitterDatabase,
+                                                       @Named(TWITTER_SERVER_DB) DatabaseInteractorImpl serverDb, @Named("last_created_at") SharePreferenceWrapper<String> lastCreatedAt) {
+        return new TweetRepository(twitterDatabase, serverDb, lastCreatedAt);
     }
 
     @Provides
@@ -60,6 +63,14 @@ public class DataModule {
     StringPreference providesUserEmail(SharedPreferences preferences) {
         return new StringPreference(preferences, "user_email", null);
     }
+
+    @Provides
+    @ApplicationScope
+    @Named("last_created_at")
+    SharePreferenceWrapper<String> providesLastCreated_at(SharedPreferences preferences) {
+        return new StringPreference(preferences, "last_created_at", null);
+    }
+
 
     @Provides
     @ApplicationScope

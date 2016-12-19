@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.QueryObservable;
@@ -36,6 +37,12 @@ public class DatabaseInteractorImpl<T extends SQLiteOpenHelper> {
 
     public Long insert(String table, ContentValues values) {
         return db.insert(table, values);
+    }
+
+    @WorkerThread
+    public long insert(@NonNull String table, @NonNull ContentValues values,
+                       @BriteDatabase.ConflictAlgorithm int conflictAlgorithm) {
+        return db.insert(table, values, conflictAlgorithm);
     }
 
     public BriteDatabase.Transaction newTransaction() {

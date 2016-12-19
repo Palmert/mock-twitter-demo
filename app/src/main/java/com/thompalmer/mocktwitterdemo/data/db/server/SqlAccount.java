@@ -38,7 +38,7 @@ public class SqlAccount {
         values.put(PASSWORD, password);
         values.put(CREATED_AT, createdAt);
         values.put(UPDATED_AT, updatedAt);
-        if(deletedAt == null) {
+        if (deletedAt == null) {
             values.putNull(DELETED_AT);
         } else {
             values.put(DELETED_AT, deletedAt);
@@ -53,8 +53,9 @@ public class SqlAccount {
     public static Account map(Cursor cursor) {
         Account account = new Account();
         account.firstName = cursor.getString(cursor.getColumnIndex(SqlAccount.FIRST_NAME));
-        account.lastName  = cursor.getString(cursor.getColumnIndex(SqlAccount.LAST_NAME));
-        account.email     = cursor.getString(cursor.getColumnIndex(SqlAccount.EMAIL));
+        account.lastName = cursor.getString(cursor.getColumnIndex(SqlAccount.LAST_NAME));
+        account.email = cursor.getString(cursor.getColumnIndex(SqlAccount.EMAIL));
+        account.password = cursor.getString(cursor.getColumnIndex(SqlAccount.PASSWORD));
         account.createdAt = cursor.getString(cursor.getColumnIndex(SqlAccount.CREATED_AT));
         account.updatedAt = cursor.getString(cursor.getColumnIndex(SqlAccount.UPDATED_AT));
         account.deletedAt = cursor.getString(cursor.getColumnIndex(SqlAccount.DELETED_AT));

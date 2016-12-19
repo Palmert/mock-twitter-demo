@@ -15,14 +15,17 @@ import com.thompalmer.mocktwitterdemo.presentation.login.LoginActivity;
 import javax.inject.Inject;
 
 public class FeedActivity extends AppCompatActivity {
+    public static final String EXTRA_CREATED_AT = "createdAt";
     @Inject FeedPresenter presenter;
+    private FeedViewModel feedViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildComponentAndInject();
         FeedViewBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_feed);
-        binding.setViewModel(new FeedViewModel(this, binding));
+        feedViewModel = new FeedViewModel(this, binding);
+        binding.setViewModel(feedViewModel);
         setSupportActionBar(binding.toolbar);
     }
 
@@ -48,5 +51,13 @@ public class FeedActivity extends AppCompatActivity {
                 .twitterComponent(TwitterApplication.get(this).component())
                 .build()
                 .inject(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(FeedViewModel.REQUEST_CODE_TWEET == requestCode && RESULT_OK == resultCode) {
+            feedViewModel.displayLatestTweet(data.getStringExtra(EXTRA_CREATED_AT));
+        }
     }
 }

@@ -50,6 +50,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         return feedItems.isEmpty() ? null : feedItems.get(feedItems.size() - 1).createdAt;
     }
 
+    public void addTweet(Tweet tweet) {
+        feedItems.add(0, tweet);
+        notifyItemInserted(0);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private FeedItemBinding feedItemBinding;
 

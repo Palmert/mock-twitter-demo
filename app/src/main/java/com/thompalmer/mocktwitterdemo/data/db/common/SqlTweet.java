@@ -49,6 +49,9 @@ public class SqlTweet {
             " WHERE " + CREATED_AT +  " < ? AND " + DELETED_AT + " IS NULL" +
             " ORDER BY " + CREATED_AT + " DESC LIMIT ? ";
 
+    public static final String QUERY = "SELECT * FROM " + TABLE +
+            " WHERE "  + CREATED_AT + " = ? ";
+
     public static ContentValues build(String text, int replyCount, int retweetCount, int likeCount,
                                       String userName, String createdAt, String updatedAt, String deletedAt) {
         ContentValues values = new ContentValues();

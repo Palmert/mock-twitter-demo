@@ -28,6 +28,6 @@ public class FeedPresenterTest {
 
     @Before
     public void setup() {
-        presenter = new FeedPresenter(mockPerformLogout, mockListTweets);
+        presenter = new FeedPresenter(mockPerformLogout, mockListTweets, getLatestTweet);
     }
 }
