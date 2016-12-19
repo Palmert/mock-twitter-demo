@@ -11,6 +11,7 @@ import com.thompalmer.mocktwitterdemo.R;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.databinding.FeedItemBinding;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,6 +52,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     }
 
     public void addTweet(Tweet tweet) {
+        if(feedItems.isEmpty()) {
+            feedItems = new ArrayList<>();
+        }
         feedItems.add(0, tweet);
         notifyItemInserted(0);
     }

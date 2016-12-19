@@ -37,9 +37,8 @@ public class DomainModule {
 
     @Provides
     @ApplicationScope
-    ListTweets provideListTweets(TwitterService twitterService, RepositoryInteractor<Tweet> tweetRepository,
-                                 UserSessionInteractor sessionPersister, @Named("last_created_at") SharePreferenceWrapper<String> lastCreatedAt) {
-        return new ListTweets(twitterService, tweetRepository, sessionPersister, lastCreatedAt);
+    ListTweets provideListTweets(TwitterService twitterService, RepositoryInteractor<Tweet> tweetRepository, UserSessionInteractor sessionPersister) {
+        return new ListTweets(twitterService, tweetRepository, sessionPersister);
     }
 
     @Provides

@@ -35,9 +35,10 @@ public class TweetRepository implements RepositoryInteractor<Tweet> {
         this.lastCreatedAt = lastCreatedAt;
     }
 
-    private List<Tweet> getRemoteTweets() {
+    private List<Tweet> getTweets(String lastCreatedAt) {
         List<Tweet> tweets = new ArrayList<>();
-        Cursor cursor = serverDb.query(SqlTweet.LIST, String.valueOf(DEFAULT_LIMIT));
+        DatabaseInteractorImpl databaseToQuery = shouldUseRemote(lastCreatedAt) ? serverDb : db;
+        Cursor cursor = databaseToQuery.query(SqlTweet.LIST, String.valueOf(DEFAULT_LIMIT));
         try {
             while (cursor.moveToNext()) {
                 tweets.add(SqlTweet.map(cursor));
@@ -53,7 +54,7 @@ public class TweetRepository implements RepositoryInteractor<Tweet> {
     @Override
     public List<Tweet> paginatedList(String lastCreatedAt) {
         if (lastCreatedAt == null) {
-            return getRemoteTweets();
+            return getTweets(lastCreatedAt);
         }
         List<Tweet> tweets = new ArrayList<>();
         DatabaseInteractorImpl databaseToQuery = shouldUseRemote(lastCreatedAt) ? serverDb : db;
@@ -70,11 +71,18 @@ public class TweetRepository implements RepositoryInteractor<Tweet> {
         return tweets;
     }
 
-    private boolean shouldUseRemote(String lastCreatedAt) {
+    @Override
+    public boolean shouldUseRemote(String lastCreatedAt) {
+        if(this.lastCreatedAt.get() == null ) {
+            return true;
+        } else if (lastCreatedAt == null) {
+            return false;
+        }
+
         DateTimeFormatter df = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd'T'HH:mm:ss Z").toFormatter();
         DateTime localLastCreatedAt = DateTime.parse(this.lastCreatedAt.get(), df);
         DateTime requestLastCreatedAt = DateTime.parse(lastCreatedAt, df);
-        return this.lastCreatedAt.get() == null || localLastCreatedAt.isEqual(requestLastCreatedAt) || localLastCreatedAt.isAfter(requestLastCreatedAt);
+        return localLastCreatedAt.isEqual(requestLastCreatedAt) || localLastCreatedAt.isAfter(requestLastCreatedAt);
     }
 
     @Override

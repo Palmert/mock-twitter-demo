@@ -23,6 +23,7 @@ public class FeedViewModel extends BaseViewModel {
     private final FeedAdapter adapter;
 
     @Inject FeedPresenter presenter;
+    private boolean requestingTweets;
 
     FeedViewModel(Context context, FeedViewBinding viewBinding) {
         super(context);
@@ -36,18 +37,29 @@ public class FeedViewModel extends BaseViewModel {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() - adapter.getItemCount() < 15) {
-                    presenter.listTweets(adapter);
+                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() - adapter.getItemCount() < 15 && !requestingTweets) {
+                    requestingTweets = true;
+                    updateFeed();
                 }
             }
         });
-        presenter.listTweets(adapter);
+        updateFeed();
+    }
+
+    private void updateFeed() {
+        presenter.listTweets(adapter.getLastCreatedAt())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(tweets -> {
+                    adapter.setFeedItems(tweets);
+                    requestingTweets = false;
+                }, throwable -> requestingTweets = false);
     }
 
     @SuppressWarnings("unused")
     public void onAddTweetClicked(View view) {
         Intent intent = new Intent(context, CreateTweetActivity.class);
-        ((Activity)context).startActivityForResult(intent, REQUEST_CODE_TWEET);
+        ((Activity) context).startActivityForResult(intent, REQUEST_CODE_TWEET);
     }
 
     public void displayLatestTweet(String createdAt) {

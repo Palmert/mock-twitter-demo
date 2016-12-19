@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:hint="@string/new_tweet_hint"
-                    android:lines="8"
+                    android:lines="6"
                     android:onTextChanged="@{viewModel::onTweetContentChanged}"/>
 
                 <Button
@@ -62,6 +62,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/edit_text_tweet"
                     android:onClick="@{viewModel::onPostTweetClicked}"
+                    android:enabled="@{viewModel.characterCount > 0}"
                     android:text="@string/tweet"/>
 
                 <TextView

@@ -9,4 +9,5 @@ public interface RepositoryInteractor<T> {
     void clear();
     void save(T item);
     void saveAll(List<T> items, String lastCreatedAt);
+    boolean shouldUseRemote(String createdAt);
 }

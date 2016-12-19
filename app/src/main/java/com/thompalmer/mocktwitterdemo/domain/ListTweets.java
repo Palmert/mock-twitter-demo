@@ -3,16 +3,12 @@ package com.thompalmer.mocktwitterdemo.domain;
 import com.thompalmer.mocktwitterdemo.data.api.TwitterService;
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
 import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse;
-import com.thompalmer.mocktwitterdemo.data.sharedpreference.SharePreferenceWrapper;
 import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
 import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
+import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import io.reactivex.Observable;
 
@@ -20,20 +16,22 @@ public class ListTweets {
     private final TwitterService twitterService;
     private final RepositoryInteractor<Tweet> tweetRepository;
     private final UserSessionInteractor sessionPersister;
-    private final @Named("last_created_at") SharePreferenceWrapper<String> lastCreatedAt;
 
     @Inject
     public ListTweets(TwitterService twitterService, RepositoryInteractor<Tweet> tweetRepository,
-                      UserSessionInteractor sessionPersister, SharePreferenceWrapper<String> lastCreatedAt) {
+                      UserSessionInteractor sessionPersister) {
         this.twitterService = twitterService;
         this.tweetRepository = tweetRepository;
         this.sessionPersister = sessionPersister;
-        this.lastCreatedAt = lastCreatedAt;
     }
 
-    public Observable<ListTweetsResponse> execute(String count) {
-        return twitterService.listTweets(sessionPersister.getEmail(), sessionPersister.getAuthToken(), count, lastCreatedAt.get())
-                .doOnNext(this::persistTweetsResponse);
+    public Observable<List<Tweet>> execute(String count, String createdAt) {
+        if (tweetRepository.shouldUseRemote(createdAt)) {
+            return twitterService.listTweets(sessionPersister.getEmail(), sessionPersister.getAuthToken(), count, createdAt)
+                    .doOnNext(this::persistTweetsResponse).map(listTweetsResponse -> listTweetsResponse.success.tweets);
+        } else {
+            return Observable.just(tweetRepository.paginatedList(createdAt));
+        }
     }
 
     private void persistTweetsResponse(ListTweetsResponse listTweetsResponse) {
