@@ -2,12 +2,12 @@
 
 This is a small app that uses Twitter as a basis for functionality and communicates with a simulated local server.
 
-Requirements: As this project is using Retrolambda please ensure that Java 8 is installed and JAVA8_HOME is an environment variable.
+Requirements: As this project is using Retrolambda please ensure that Java 8 is installed and JAVA8_HOME is added as an environment variable.
 
 #Features
 
 ###User log in
-The server database is seeded with an array of accounts stored in /assets/accounts.json. The user passwords are plain text
+The server database is seeded with an array of accounts stored in '/assets/accounts.json'. The user passwords are plain text
 without any encryption in order to simplify development. In order to sign in please enter one of the email and password
 combinations within the file. If you don't want to view the file you simply log in as 'thomapalmer@gmail.com' with 'password1'
 as your password. Don't worry all of the passwords are just as creative and secure.
@@ -25,7 +25,7 @@ as your password. Don't worry all of the passwords are just as creative and secu
 ###Tweet feed
 After login you will be presented with a feed of tweets starting with the most recent. The server database is seeded with 1000 tweets
 generated on www.json-generator.com. The json template model was derived by hitting the twitter search api and stripping out
-any unnecessary data. The seed data is stored in the assets folder as tweets.json.
+any unnecessary data. The seed data is stored in the assets folder as 'tweets.json'.
 
 I've implemented a simple implementation of endless
 scrolling on the feed. Tweets are retrieved 50 items at a time and more are added to the list as the user nears the end. Tweets received from the server
@@ -80,7 +80,7 @@ instead but it was much more simple with MockRetrofit to have them passed in as 
 - SqlBrite: Lightweight SqliteOpenHelper Wrapper with some nice features such as Observable queries. However, I didn't end up using any
 of the additional features provided by this library due to some issues with Java 8 generics.
 
-- Retrolamba: Pretty simple one here. Just allows lambda's to be used prior to Java 8. Fantastic. Kotlin is more fantastic though.
+- Retrolamba: Pretty simple one here. Just allows lambda's to be used prior to Java 8. Fantastic.
 
 - Dagger2: Dependency injection. Fairly new to this one and I used it more extensively in this project than others. Pretty sure
 I butchered its usage but it seemed to the trick.
