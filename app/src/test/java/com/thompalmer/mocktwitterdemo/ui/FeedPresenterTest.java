@@ -1,5 +1,6 @@
 package com.thompalmer.mocktwitterdemo.ui;
 
+import com.thompalmer.mocktwitterdemo.domain.GetLatestTweet;
 import com.thompalmer.mocktwitterdemo.domain.ListTweets;
 import com.thompalmer.mocktwitterdemo.domain.PerformLogout;
 import com.thompalmer.mocktwitterdemo.presentation.feed.FeedPresenter;
@@ -23,6 +24,9 @@ public class FeedPresenterTest {
 
     @Mock
     ListTweets mockListTweets;
+
+    @Mock
+    GetLatestTweet getLatestTweet;
 
     private FeedPresenter presenter;
 

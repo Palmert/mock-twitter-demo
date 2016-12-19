@@ -1,6 +1,7 @@
 package com.thompalmer.mocktwitterdemo.domain;
 
 import com.thompalmer.mocktwitterdemo.data.api.model.entity.Tweet;
+import com.thompalmer.mocktwitterdemo.data.sharedpreference.SharePreferenceWrapper;
 import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
 import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
@@ -23,6 +24,9 @@ public class PerformLogoutTest {
     @Mock
     RepositoryInteractor<Tweet> mockTweetRepository;
 
+    @Mock
+    SharePreferenceWrapper<String> mocklastCreatedAt;
+
     @InjectMocks PerformLogout performLogout;
 
     @Test
@@ -30,5 +34,6 @@ public class PerformLogoutTest {
         performLogout.execute();
         verify(mockSessionPersister).clear();
         verify(mockTweetRepository).clear();
+        verify(mocklastCreatedAt).clear();
     }
 }

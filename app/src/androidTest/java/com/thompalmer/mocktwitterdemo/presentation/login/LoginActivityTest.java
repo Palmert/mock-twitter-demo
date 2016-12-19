@@ -1,6 +1,5 @@
 package com.thompalmer.mocktwitterdemo.presentation.login;
 
-
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,47 +24,78 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.thompalmer.mocktwitterdemo.data.api.LocalTwitterServer.*;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class LoginViewModelTest {
+public class LoginActivityTest {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
-    public void invalidCredentials_errorMessageShouldUpdate() {
-        ViewInteraction appCompatAutoCompleteTextView = onView(
-                withClassName(is("android.support.v7.widget.AppCompatAutoCompleteTextView")));
-        appCompatAutoCompleteTextView.perform(scrollTo(), click());
+    public void successfulLoginShouldTransitionToFeed() {
+        onView(withId(R.id.edt_email))
+                .perform(scrollTo(), replaceText("thomapalmer@gmail.com"), closeSoftKeyboard());
 
-        ViewInteraction appCompatAutoCompleteTextView2 = onView(
-                withClassName(is("android.support.v7.widget.AppCompatAutoCompleteTextView")));
-        appCompatAutoCompleteTextView2.perform(scrollTo(), replaceText("thomapalmer@gmail.com"), closeSoftKeyboard());
+        onView(withId(R.id.edt_password))
+                .perform(scrollTo(), replaceText("password1"), closeSoftKeyboard());
 
-        ViewInteraction appCompatEditText = onView(
-                withClassName(is("android.support.v7.widget.AppCompatEditText")));
-        appCompatEditText.perform(scrollTo(), replaceText("password"), closeSoftKeyboard());
+        onView(withId(R.id.btn_sign_in))
+                .perform(scrollTo(), click());
 
-        ViewInteraction appCompatButton = onView(
-                withText("Sign in or register"));
-        appCompatButton.perform(scrollTo(), click());
+        onView(allOf(withId(R.id.logout), withText("Logout"), isDisplayed()))
+                .check(matches(isDisplayed()));
+
+        onView(withId(R.id.logout))
+                .perform(click());
+    }
+
+    @Test
+    public void attemptLoginWithNonExistentUser_errorMessageShouldUpdate() {
+        onView(withId(R.id.edt_email))
+                .perform(scrollTo(), replaceText("thoma1palmer@gmail.com"), closeSoftKeyboard());
+
+        onView(withId(R.id.edt_password))
+                .perform(scrollTo(), replaceText("password"), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_sign_in))
+                .perform(scrollTo(), click());
 
         ViewInteraction textView = onView(
-                allOf(withText("Invalid username/password"),
+                allOf(withText(MESSAGE_USER_DOES_NOT_EXIST),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.text_input_layout_password),
                                         1),
                                 0),
                         isDisplayed()));
-        textView.check(matches(withText("Invalid username/password")));
+        textView.check(matches(withText(MESSAGE_USER_DOES_NOT_EXIST)));
+    }
 
+    @Test
+    public void attemptLoginWithInvalidCredentials_errorMessageShouldUpdate() {
+        onView(withId(R.id.edt_email))
+                .perform(scrollTo(), replaceText("thomapalmer@gmail.com"), closeSoftKeyboard());
+
+        onView(withId(R.id.edt_password))
+                .perform(scrollTo(), replaceText("password"), closeSoftKeyboard());
+
+        onView(withId(R.id.btn_sign_in))
+                .perform(scrollTo(), click());
+
+        ViewInteraction textView = onView(
+                allOf(withText(MESSAGE_INVALID_PASSWORD),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.text_input_layout_password),
+                                        1),
+                                0),
+                        isDisplayed()));
+        textView.check(matches(withText(MESSAGE_INVALID_PASSWORD)));
     }
 
     private static Matcher<View> childAtPosition(

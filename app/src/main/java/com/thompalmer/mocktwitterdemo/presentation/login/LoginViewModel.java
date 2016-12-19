@@ -9,8 +9,11 @@ import android.view.View;
 import com.thompalmer.mocktwitterdemo.base.BaseViewModel;
 import com.thompalmer.mocktwitterdemo.presentation.feed.FeedActivity;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -41,15 +44,25 @@ public class LoginViewModel extends BaseViewModel {
     @SuppressWarnings("unused")
     public void onEmailChanged(CharSequence s, int start, int before, int count) {
         email = s.toString();
-        int emailMessageId = presenter.updateEmailMessageId(email);
-        viewBinding.textInputLayoutEmail.setError(emailMessageId == 0 ? null : context.getString(emailMessageId));
+
+        Observable.just(presenter.updateEmailMessageId(email))
+                .debounce(1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(emailMessageId -> {
+                    viewBinding.textInputLayoutEmail.setError(emailMessageId == 0 ? null : context.getString(emailMessageId));
+                });
+
     }
 
     @SuppressWarnings("unused")
     public void onPasswordChanged(CharSequence s, int start, int before, int count) {
         password = s.toString();
-        int passwordMessageId = presenter.updatePasswordMessageId(password);
-        viewBinding.textInputLayoutPassword.setError(passwordMessageId == 0 ? null : context.getString(passwordMessageId));
+        Observable.just(presenter.updatePasswordMessageId(password))
+                .debounce(1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(passwordMessageId -> {
+                    viewBinding.textInputLayoutPassword.setError(passwordMessageId == 0 ? null : context.getString(passwordMessageId));
+                });
     }
 
     @SuppressWarnings("unused")

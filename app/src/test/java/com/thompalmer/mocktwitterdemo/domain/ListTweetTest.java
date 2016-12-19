@@ -7,11 +7,6 @@ import com.thompalmer.mocktwitterdemo.data.sharedpreference.SharePreferenceWrapp
 import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
 import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
-import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,23 +46,34 @@ public class ListTweetTest {
     public void setup() {
         when(mockSessionPersister.getEmail()).thenReturn("email");
         when(mockSessionPersister.getAuthToken()).thenReturn(1L);
-        when(mockLastCreatedAt.get()).thenReturn("");
     }
 
     @Test
-    public void shouldStoreFetchedTweetsOnSuccess() {
+    public void shouldStoreRemoteTweetsOnSuccess() {
+        when(mockTweetRepository.shouldUseRemote(anyString())).thenReturn(true);
         when(mockTwitterService.listTweets(anyString(), anyLong(), anyString(), anyString()))
                 .thenReturn(Observable.just(ListTweetsResponse.success(new ArrayList<>(), LAST_CREATED_AT)));
-        listTweets.execute(LIMIT).subscribe();
+        listTweets.execute(LIMIT, "").subscribe();
         verify(mockTweetRepository).saveAll(anyList(), anyString());
     }
 
     @Test
-    public void shouldNotAttemptToStoreOnFailure() {
+    public void shouldNotAttemptToStoreRemoteTweetsOnFailure() {
+        when(mockTweetRepository.shouldUseRemote(anyString())).thenReturn(true);
         when(mockTwitterService.listTweets(anyString(), anyLong(), anyString(), anyString()))
                 .thenReturn(Observable.just(ListTweetsResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_FAILED_AUTHENTICATION)));
-        listTweets.execute(LIMIT).subscribe();
+        listTweets.execute(LIMIT, "").subscribe();
 
         verify(mockTweetRepository, never()).saveAll(anyList(), anyString());
+    }
+
+    @Test
+    public void shouldLoadTweetsFromLocalStorage() {
+        when(mockTweetRepository.shouldUseRemote(anyString())).thenReturn(false);
+        when(mockTwitterService.listTweets(anyString(), anyLong(), anyString(), anyString()))
+                .thenReturn(Observable.just(ListTweetsResponse.failure(ERROR_UNAUTHORIZED, MESSAGE_FAILED_AUTHENTICATION)));
+        listTweets.execute(LIMIT, "").subscribe();
+
+        verify(mockTweetRepository).paginatedList(anyString());
     }
 }

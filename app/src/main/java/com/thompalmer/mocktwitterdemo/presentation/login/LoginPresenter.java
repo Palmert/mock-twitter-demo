@@ -32,7 +32,7 @@ public class LoginPresenter {
     }
 
     public boolean isEmailValid(String email) {
-        return !email.isEmpty() && email.contains("@");
+        return email != null && !email.isEmpty() && email.contains("@");
     }
 
     public int updatePasswordMessageId(String password) {
@@ -48,7 +48,7 @@ public class LoginPresenter {
     }
 
     public boolean isPasswordValid(String password) {
-        return !password.isEmpty() && password.length() >= 8;
+        return password != null && !password.isEmpty() && password.length() >= 8;
     }
 
     public boolean hasValidCredentialsForLoginAttempt(String email, String password) {

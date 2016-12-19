@@ -6,6 +6,7 @@ import com.thompalmer.mocktwitterdemo.data.api.model.response.ListTweetsResponse
 import com.thompalmer.mocktwitterdemo.domain.interactor.RepositoryInteractor;
 import com.thompalmer.mocktwitterdemo.domain.interactor.UserSessionInteractor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,7 +29,9 @@ public class ListTweets {
     public Observable<List<Tweet>> execute(String count, String createdAt) {
         if (tweetRepository.shouldUseRemote(createdAt)) {
             return twitterService.listTweets(sessionPersister.getEmail(), sessionPersister.getAuthToken(), count, createdAt)
-                    .doOnNext(this::persistTweetsResponse).map(listTweetsResponse -> listTweetsResponse.success.tweets);
+                    .doOnNext(this::persistTweetsResponse).map(listTweetsResponse ->
+                            listTweetsResponse.success != null ? listTweetsResponse.success.tweets : new ArrayList<Tweet>()
+                    );
         } else {
             return Observable.just(tweetRepository.paginatedList(createdAt));
         }
